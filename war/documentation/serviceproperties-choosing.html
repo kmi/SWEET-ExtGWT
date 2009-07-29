@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<link rel="stylesheet" type="text/css" href="stylesheet.css" />
+		<script type="text/javascript" src="javascript/navigator.js"></script>
+		<title>MicroWSMO Editor | Choose the Service Properties</title>
+	</head>
+	<body onload="showNavigator();">
+		
+		<div id="navigator" class="linkable">
+			<!-- a navigator will be inserted dinamycally by a javascript function -->
+		</div>
+		
+		<div align="center" class="title">Service Properties Choosing Details</div><br />
+		This is a flexible operation. It means that the user can chose every kind of word which
+		for him is descriptive, suitable for this web service description.		
+		<ol class="step-description">
+			<li>
+				The user highlights a keyword into the text.
+			</li>
+			<li>
+				Right clicks on it and choose the "invoke watson" operation.
+			</li>
+			<li>
+				The string is retrieved and is sent to watson
+			</li>
+			<li>
+				Watson takes this string in input and returns a list of URL ontologies
+			</li>
+			<li>
+				This list is showed in a panel, situated on the left side of the editor, but in another
+				tab called "Service Properties Panel".
+			</li>
+		</ol>
+		
+		<p class="description">
+			The URLs retrieved and returned by watson, are shown in a tree view representation.
+			Every direct child of the tree's root element have the name of the
+			string that the user have chosen and next there is a number which said in how many
+			ontologies it is. The children of each item are just the URLs of the ontologies plus
+			the URL of the selected item.
+		</p>
+		
+		<br />
+		<div align="center" class="middle-title">EVENT Details</div><br />
+		
+		<h2>Service Properties Panel</h2>
+		<p class="description">
+			Is the panel placed on the left side of the editor. It is in a different tab
+			respect to hREST tags Panel and hREST DOM Panel. When the user double cliks
+			on one of the service properties item, it will collapse itself and will show
+			the list of the ontologies URLs plus its URL. If the user clicks on a ontology
+			URL, the description of this ontology will be showed, else if the user clicks
+			on the item's URL, will happen the same think, but in this case, the item will
+			be highlighted.
+		</p>
+		<ul class="event-description">
+			<li>
+				<span class="emphasis">Double Click EVENT</span>
+				<p></p>
+				<ul>
+					<li>
+						<span class="emphasis">Service properties item</span>
+						<ol>
+							<li>
+								It will collapse itself and will show the list of the ontologies URLs.
+							</li>
+						</ol>
+					</li>
+					<li>
+						<span class="emphasis">Ontology's URL item</span>
+						<ol>
+							<li>
+								A new view will be showed. This view will be a new Environment
+								where the user can see the whole ontology.
+							</li>
+						</ol>
+					</li>
+				</ul>
+				<p class="description emphasis">
+					NOTE: The visualization of the new view isn't still under definition. It will be in a
+					next implementation of the editor. 
+				</p>
+			</li>
+		</ul>
+			
+	</body>
+</html>

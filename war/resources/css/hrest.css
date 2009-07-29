@@ -1,0 +1,51 @@
+@CHARSET "UTF-8";
+.service {
+	 background-color: #FFA500;
+	 border-color: #FFA500;
+	 border-style: solid;
+	 border-width: thin;
+	 padding: 10pt;
+}
+
+.label {
+	color: black;
+	font-weight: bold;
+	font-family: cursive;
+}
+
+.method {
+}
+
+.address {
+	color: red;
+	font-weight: bold;
+	font-family: cursive;
+}
+
+.operation {
+	background-color: #FFA500;
+	border-color: black;
+	border-style: dotted;
+	border-width: thin;
+	margin: 10pt;
+	padding: 10pt;
+}
+
+.input {
+	border-style: dotted;
+	border-width: thin;
+}
+
+.output {
+	border-style: dotted;
+	border-width: thin;
+}
+
+
+/*
+ *	Is the style for the keyword semantically annotated.
+ */
+.entity {
+	color: white;
+	background-color: black;
+}
