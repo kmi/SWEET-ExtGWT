@@ -1,19 +1,2 @@
-1) Sistemare il file XSLT che trasforma la pagina HTML in una pagina XML, e verificare
-il file XMLSchema. Ci sono alcuni problemi nel tagging.
-
-2) Scrivere il codice per la visualizzazione degli elementi hREST nel pannello hDOM. Per 
-manipolare il tutto basterà utilizzare l'oggetto document che esce fuori dal parsing del file.
-
-3) Andare a modificare il codice che gestisce l'abilitazione e la disabilitazione dei tag hREST.
-Per ora li abilità sempre senza nessun controllo.
-
-4) Cambiare l'implementazione del metodo populateServiceProperties dentro
-la classe Controller. Ora funziona con una classe stub, dopo dovrà funzionare
-con l'API di Watson on the web
-
-5) x-auto-<nn> Ricordarsi di cambiare questo meccanismo, in un'altro dinamico. Ogni volta
-che si compila il progetto, ricordarsi di cambiare questo valore in:
-
-ControllerToolkit::deleteElement()
-ControllerToolkit::retrieveIframeHtml()
-ControllerToolkit::retrieveIframeSelection()
+1) Fix the proxy. In some browser doesn't work because we should check the kind of browser
+and then choose the suitable way to comunicate with the iframe

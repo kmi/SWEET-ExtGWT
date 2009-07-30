@@ -21,7 +21,6 @@ import com.extjs.gxt.ui.client.event.EventType;
 import com.extjs.gxt.ui.client.event.Events;
 import com.extjs.gxt.ui.client.event.KeyListener;
 import com.extjs.gxt.ui.client.event.Listener;
-import com.extjs.gxt.ui.client.store.TreeStore;
 import com.extjs.gxt.ui.client.widget.Component;
 import com.google.gwt.user.client.Window;
 
@@ -80,7 +79,7 @@ public final class Controller extends KeyListener implements Listener<ComponentE
 		} else if( eventType.equals(Events.OnDoubleClick) ) {
 			
 			if( componentID.equals(ComponentID.HREST_TAGS_TREE) ) {
-				hrestAnnotation(sourceComponent); 
+				hrestAnnotation(sourceComponent);
 			}
 			
 		} else if( eventType.equals(Events.OnKeyPress) ) {
@@ -93,6 +92,11 @@ public final class Controller extends KeyListener implements Listener<ComponentE
 		}
 			
 	}
+	
+	public native void prova() /*-{
+		var iframe = $doc.getElementById("webPageDisplay").lastChild.firstChild.firstChild.firstChild;
+		iframe.contentWindow.callProxy('http://www.google.it');
+	}-*/;
 	
 	public void updateEditorState() {
 		ControllerToolkit.createSession();
