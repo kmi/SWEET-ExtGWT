@@ -1,2 +1,0 @@
-1) Fix the proxy. In some browser doesn't work because we should check the kind of browser
-and then choose the suitable way to comunicate with the iframe

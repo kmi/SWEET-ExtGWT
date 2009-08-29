@@ -1,3 +1,0 @@
-@com.extjs.gxt.ui.client.widget.MessageBox::alert(Ljava/lang/String;Ljava/lang/String;Lcom/extjs/gxt/ui/client/event/Listener;)
-			("MicroWSMO Editor - AJAX Exception", "Your browser doesn't support the asynchronous comunication with the server. Check if it is up to date", null).
-			@com.extjs.gxt.ui.client.widget.MessageBox::setIcon(Ljava/lang/String;)("ext-mb-error");
