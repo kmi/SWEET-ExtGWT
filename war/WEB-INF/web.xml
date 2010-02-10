@@ -56,6 +56,14 @@
 		<servlet-class>
 		uk.ac.kmi.microwsmo.server.servlet.Updater</servlet-class>
 	</servlet>
+	<servlet>
+		<description>
+		</description>
+		<display-name>savetorepo</display-name>
+		<servlet-name>savetorepo</servlet-name>
+		<servlet-class>
+		uk.ac.kmi.microwsmo.server.servlet.SaveToRepository</servlet-class>
+	</servlet>
 	<servlet-mapping>
 		<servlet-name>proxy</servlet-name>
 		<url-pattern>/proxy</url-pattern>
@@ -83,6 +91,10 @@
 	<servlet-mapping>
 		<servlet-name>updater</servlet-name>
 		<url-pattern>/updater</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>savetorepo</servlet-name>
+		<url-pattern>/savetorepo</url-pattern>
 	</servlet-mapping>
 	
 	<welcome-file-list>
