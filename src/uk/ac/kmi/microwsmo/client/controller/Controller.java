@@ -24,6 +24,7 @@ import com.extjs.gxt.ui.client.event.Events;
 import com.extjs.gxt.ui.client.event.KeyListener;
 import com.extjs.gxt.ui.client.event.Listener;
 import com.extjs.gxt.ui.client.widget.Component;
+import com.extjs.gxt.ui.client.widget.Info;
 import com.google.gwt.user.client.Window;
 
 /**
@@ -63,7 +64,7 @@ public final class Controller extends KeyListener implements Listener<ComponentE
 			if( componentID.equals(ComponentID.QUERY_WATSON_BUTTON) ) {
 				queryWatson();
 			} else if( componentID.equals(ComponentID.SAVE_BUTTON)) {
-				save();
+				//save();
 			} else if( componentID.equals(ComponentID.EXPORT_BUTTON) ) {
 				export();
 			} else if( componentID.equals(ComponentID.ANNOTATIONS_CONTEXT_MENU) ) {
@@ -92,7 +93,6 @@ public final class Controller extends KeyListener implements Listener<ComponentE
 			if( componentID.equals(ComponentID.NAVIGATOR_TEXT_FIELD) && keyCode == ENTER) {
 				browse();
 			}
-			
 		} else if( eventType.equals(Events.OnMouseOver) ) {
 			if( componentID.contains(ComponentID.SEMANTIC_ANNOTATION_CONTEXT_MENU) ) {
 				disableEnableContextMenu(componentID);

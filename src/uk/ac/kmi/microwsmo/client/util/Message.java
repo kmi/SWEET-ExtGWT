@@ -14,6 +14,8 @@ public final class Message {
 	public final static String WATSON_SELECTION = "watson_selection";
 	public final static String TERM_ALREADY_RETRIEVED = "term_already_retrieved";
 	public final static String NO_WATSON_RESULT = "no_watson_result";
+	public final static String STORE_SUCCESS = "store_success";
+	public final static String STORE_FAIL = "store_fail";
 	
 	public static void show(String command) {
 		show(command, "");
@@ -36,6 +38,10 @@ public final class Message {
 			MessageBox.alert(title + "Watson warning", "The keyword \"" + param + "\" is already retrieved!", null);
 		} else if( command.equals(NO_WATSON_RESULT) ) {
 			MessageBox.info(title + "Watson info", "Watson returned no search results for this keyword!", null);
+		} else if( command.equals(STORE_SUCCESS) ) {
+			MessageBox.info(title + "Repository info", "Successfully save to the repository. The URI is " + param, null);
+		} else if( command.equals(STORE_FAIL) ) {
+			MessageBox.alert(title + "Repository warning", "Fail to save to the repository", null);
 		}
 	}
 	

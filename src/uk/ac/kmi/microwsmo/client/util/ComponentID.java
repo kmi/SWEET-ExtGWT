@@ -13,6 +13,8 @@ public abstract class ComponentID {
 	public static String EDITOR_MENU_BAR = "editorMenuBar";
 	public static String EDITOR_VIEWPORT = "editorViewport";
 	public static String EXPORT_BUTTON = "exportButton";
+	public static String EXPORT_LOCAL_MENU = "exportLocalMenu";
+	public static String EXPORT_REPOSITORY_MENU = "exportRepositoryMenu";
 	public static String SERVICE_STRUCTURE_CONTEXT_MENU = "serviceStructureContextMenu";
 	public static String SERVICE_STRUCTURE_PANEL = "serviceStructurePanel";
 	public static String SERVICE_STRUCTURE_TREE = "serviceStructureTree";
@@ -29,6 +31,8 @@ public abstract class ComponentID {
 	public static String QUERY_WATSON_BUTTON = "queryWatsonButton";
 	public static String RIGHT_SIDE_PANEL = "rightSidePanel";
 	public static String SAVE_BUTTON = "saveButton";
+	public static String SAVE_LOCAL_MENU = "saveLocalMenu";
+	public static String SAVE_REPOSITORY_MENU = "saveRepositoryMenu";
 	public static String SEMANTIC_ANNOTATION_CONTEXT_MENU = "semanticAnnotationContextMenu::";
 	public static String SEMANTIC_ANNOTATION_TREE = "semanticAnnotationTree::";
 	public static String SEMANTIC_PANEL = "semanticPanel";

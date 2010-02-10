@@ -396,5 +396,44 @@ public final class ControllerToolkit {
 		// and delete it
 		parent.removeChild(element);
 	}-*/;
-	
+
+	/**
+	 * Saves the web content of the iframe in a local file.
+	 */
+	public static native void saveToRepository(String uri, String username, String password) /*-{
+		// handle the http comunication object
+		var httpRequest = @uk.ac.kmi.microwsmo.client.controller.ControllerToolkit::getXMLHttpRequest()();
+		if( httpRequest != null ) {
+			// retrieve the html code from the iFrame
+	  		var html = @uk.ac.kmi.microwsmo.client.controller.ControllerToolkit::retrieveIframeHTML()();
+	  		// wrap it inside the "html" elements
+	    	html = "<html>" + html + "</html>";
+	    	// and encode it for the URI
+	    	var parameter = "uri=" + encodeURIComponent(uri)
+	    		+ "&user=" + username + "&password=" + password
+	    		+ "&html=" + encodeURIComponent(html);
+	    	// call the servlet by a POST method, in asynchronous mode
+			httpRequest.open("POST", "../savetorepo", true);
+			// set the header
+			httpRequest.setRequestHeader("content-type", "application/x-www-form-urlencoded");
+			httpRequest.setRequestHeader("content-length", parameter.length);
+			httpRequest.setRequestHeader("connection", "close");
+			httpRequest.onreadystatechange = function(){
+				if( httpRequest.readyState == 4 && httpRequest.status == 200 ) {
+					if( httpRequest.responseText != "null" && httpRequest.responseText != "" ) {
+						@uk.ac.kmi.microwsmo.client.util.Message::show(Ljava/lang/String;Ljava/lang/String;)
+						(@uk.ac.kmi.microwsmo.client.util.Message::STORE_SUCCESS, httpRequest.responseText);
+					} else {
+						@uk.ac.kmi.microwsmo.client.util.Message::show(Ljava/lang/String;)
+						(@uk.ac.kmi.microwsmo.client.util.Message::STORE_FAIL);
+					}
+				}
+			}
+			// send the parameter
+			httpRequest.send(parameter);
+		} else {
+			@uk.ac.kmi.microwsmo.client.util.Message::show(Ljava/lang/String;)
+			(@uk.ac.kmi.microwsmo.client.util.Message::STORE_FAIL);
+		}
+	}-*/;
 }
