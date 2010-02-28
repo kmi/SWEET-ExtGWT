@@ -1,5 +1,6 @@
 package uk.ac.kmi.microwsmo.server.servlet;
 
+import java.io.Console;
 import java.io.IOException;
 
 import javax.servlet.ServletException;
@@ -14,6 +15,8 @@ import uk.ac.kmi.microwsmo.server.DomainOntologiesRetriever;
 import uk.ac.kmi.microwsmo.server.ServicePropertiesRetriever;
 import uk.ac.kmi.microwsmo.server.model.SemanticTreesModel;
 
+import org.apache.log4j.Logger;
+
 /**
  * 
  * @author KMi, The Open University
@@ -21,7 +24,7 @@ import uk.ac.kmi.microwsmo.server.model.SemanticTreesModel;
 public class Updater extends HttpServlet {
 
 	private static final long serialVersionUID = -3398593514965014640L;
-	
+	Logger logger = Logger.getLogger("Updater");
 	/**
 	 * Redirects the user to an error page. It means the user is not allowed to
 	 * calls directly the page by a GET method.
@@ -34,13 +37,17 @@ public class Updater extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String method = request.getParameter("method");
-		HttpSession session = request.getSession(true);
 		String result = "";
-		if( method.equals("getSp") ) {
-			result = getServiceProperties(session);
-		} else if( method.equals("getDo") ) {
-			result = getDomainOntologies(session);
+		
+		HttpSession session = request.getSession(true);
+		if (session != null){
+			if( method.equals("getSp") ) {
+				result = getServiceProperties(session);
+			} else if( method.equals("getDo") ) {
+				result = getDomainOntologies(session);
+			}
 		}
+		
 		response.setContentType("text/plain");
 		ServletOutputStream out = response.getOutputStream();
 		out.print(result);
@@ -68,12 +75,19 @@ public class Updater extends HttpServlet {
 	
 	private String getServiceProperties(HttpSession session) {
 		SemanticTreesModel model = (SemanticTreesModel) session.getAttribute("treesModel");
-		return model.getServiceProperties();
+		if(model != null)
+			return model.getServiceProperties();
+		else
+			logger.warn("Service properties are null");
+			return "";
 	}
 	
 	private String getDomainOntologies(HttpSession session) {
 		SemanticTreesModel model = (SemanticTreesModel) session.getAttribute("treesModel");
-		return model.getDomainOntologies();
+		if(model != null)
+			return model.getDomainOntologies();
+		else
+			logger.warn("Domain ontologies are null");
+			return "";
 	}
-	
 }

@@ -24,7 +24,7 @@ import com.extjs.gxt.ui.client.event.Events;
 import com.extjs.gxt.ui.client.event.KeyListener;
 import com.extjs.gxt.ui.client.event.Listener;
 import com.extjs.gxt.ui.client.widget.Component;
-import com.extjs.gxt.ui.client.widget.Info;
+import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.user.client.Window;
 
 /**
@@ -39,6 +39,7 @@ public final class Controller extends KeyListener implements Listener<ComponentE
 	
 	// the code of the "Enter" key
 	private static final int ENTER = 13;
+	//public static Object currentSelection = null;
 	
 	/**
 	 * Init the controller.
@@ -60,7 +61,6 @@ public final class Controller extends KeyListener implements Listener<ComponentE
 		EventType eventType = event.getType();
 		
 		if( eventType.equals(Events.OnClick) ) {
-			
 			if( componentID.equals(ComponentID.QUERY_WATSON_BUTTON) ) {
 				queryWatson();
 			} else if( componentID.equals(ComponentID.SAVE_BUTTON)) {
@@ -82,8 +82,9 @@ public final class Controller extends KeyListener implements Listener<ComponentE
 			}
 			
 		} else if( eventType.equals(Events.OnDoubleClick) ) {
-			
 			if( componentID.equals(ComponentID.HREST_TAGS_TREE) ) {
+				saveSelection();
+				
 				hrestAnnotation(sourceComponent);
 			}
 			
@@ -97,9 +98,9 @@ public final class Controller extends KeyListener implements Listener<ComponentE
 			if( componentID.contains(ComponentID.SEMANTIC_ANNOTATION_CONTEXT_MENU) ) {
 				disableEnableContextMenu(componentID);
 			} else if( componentID.contains(ComponentID.DOMAIN_ONTOLOGIES_CONTEXT_MENU) ) {
-				disableEnableContextMenu(componentID);}
+				disableEnableContextMenu(componentID);
+			}
 		}
-		
 	}
 	
 	public native void prova() /*-{
@@ -161,6 +162,21 @@ public final class Controller extends KeyListener implements Listener<ComponentE
 	}
 	
 	/**
+	 * This method stores the currently selected text in a variable,
+	 * so that if the text selection is lost (browser problems), it can be restored. 
+	 * 
+	 * @param component the item of the tree which fired the event.
+	 */
+	private void saveSelection() {
+		// retrieve the item which fired the event
+		//Message.show(Message.ERROR);//Toremove
+		
+		ControllerToolkit.setSelectionParams();
+		//currentSelection = selection;
+		//System.out.println(currentSelection.get(0) + "" + currentSelection.get(1));
+	}
+	
+	/**
 	 * Annotate the text wrapped with the hREST tag. This
 	 * method is used by every hREST tag item, and the kind
 	 * of the annotation is choosen by the id of it. 
@@ -169,6 +185,9 @@ public final class Controller extends KeyListener implements Listener<ComponentE
 	 */
 	private void hrestAnnotation(Component component) {
 		// retrieve the item which fired the event
+		//Message.show(Message.INVALID_URI);//Toremove
+		saveSelection();
+		
 		HrestTagsTree tree = (HrestTagsTree) component;
 		DeprecatedBaseTreeItem item = tree.getSelectedItem();
 		// if is enabled can executes the annotation

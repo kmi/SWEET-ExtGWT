@@ -3,6 +3,8 @@ package uk.ac.kmi.microwsmo.client.controller;
 import java.util.List;
 
 import com.extjs.gxt.ui.client.data.ModelData;
+import com.extjs.gxt.ui.client.widget.Component;
+import com.google.gwt.core.client.JsArrayString;
 
 import uk.ac.kmi.microwsmo.client.MicroWSMOeditor;
 import uk.ac.kmi.microwsmo.client.util.CSSIconImage;
@@ -18,6 +20,8 @@ import uk.ac.kmi.microwsmo.client.view.ServicePropertiesTree;
  */
 public final class ControllerToolkit {
 
+	public static Object currentSelection = null;
+	
 	/**
 	 * Returns the handler for the asynchronous
 	 * comunication with the server.
@@ -102,6 +106,46 @@ public final class ControllerToolkit {
 		return webPage.contentWindow.getSelection();
 	}-*/;
 	
+	public static native void setSelectionParams() /*-{
+	//Browser independent
+	// var userSelection;
+	//if (window.getSelection) {
+	//	userSelection = window.getSelection();
+	//}
+	//else if (document.selection) { // should come last; Opera!
+	//	userSelection = document.selection.createRange();
+	//}
+	
+	var comp = @uk.ac.kmi.microwsmo.client.controller.ControllerToolkit::getWebPage()();
+	var userSelection;
+	if (comp.contentWindow.getSelection) {
+		userSelection = comp.contentWindow.getSelection();
+		
+	//IExplorer	
+	} else if (comp.contentWindow.document.getSelection) {
+		userSelection = comp.contentWindow.document.getSelection();
+	} else if (comp.contentWindow.document.selection) {
+		userSelection = comp.contentWindow.document.selection.createRange().text;
+	//Opera	
+	} else if (document.selection) { // should come last; Opera!
+		userSelection = document.selection.createRange();
+	}
+	else if(window.getSelection){
+	      userSelection = window.getSelection();
+	} else if(document.getSelection){
+	      userSelection = document.getSelection();
+	}
+	      
+	//return [""+txt,""+pos];
+	//console.log("setSelectionParams: "+ userSelection);
+		
+	currentSelection = userSelection;
+	}-*/;
+
+	public static native Object getStoredSelection()/*-{
+			return currentSelection;
+	}-*/;
+
 	public static native void createSession() /*-{
 		// handle the http comunication object
 		var httpRequest = @uk.ac.kmi.microwsmo.client.controller.ControllerToolkit::getXMLHttpRequest()();

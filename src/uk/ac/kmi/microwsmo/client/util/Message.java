@@ -16,6 +16,8 @@ public final class Message {
 	public final static String NO_WATSON_RESULT = "no_watson_result";
 	public final static String STORE_SUCCESS = "store_success";
 	public final static String STORE_FAIL = "store_fail";
+	public final static String ERROR = "error";
+	public final static String DIV_ELEMENT = "div_element";
 	
 	public static void show(String command) {
 		show(command, "");
@@ -42,6 +44,8 @@ public final class Message {
 			MessageBox.info(title + "Repository info", "Successfully save to the repository. The URI is " + param, null);
 		} else if( command.equals(STORE_FAIL) ) {
 			MessageBox.alert(title + "Repository warning", "Fail to save to the repository", null);
+		} else if( command.equals(DIV_ELEMENT) ) {
+			MessageBox.alert(title + "Annotation warning", "Your selection will breakup the HTML code.", null);
 		}
 	}
 	
