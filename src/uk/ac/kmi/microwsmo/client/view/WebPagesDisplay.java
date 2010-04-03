@@ -17,7 +17,7 @@ public final class WebPagesDisplay extends ContentPanel {
 	public WebPagesDisplay() {
 		super();
 		setID(ComponentID.WEB_PAGE_DISPLAY);
-		setHeading("MicroWSMO Editor");
+		setHeading("SWEET");
 		setHeaderVisible(false);
 		setUrl("proxyPage.html");
 		layout();

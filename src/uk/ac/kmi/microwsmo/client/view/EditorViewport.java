@@ -116,7 +116,9 @@ public final class EditorViewport extends Viewport {
 	 */
 	private void addComponents() {
 		// The menu bar for now is disabled.
-		add(new LayoutContainer(), northConstraint);
+		LayoutContainer northContainer = new LayoutContainer();
+		northContainer.addText("<span style=\"font-size: 11px; font-family: tahoma,arial,verdana,sans-serif; color: #15428B;\">For best user experience, plese use the latest verion of Firefox.</span>");
+		add(northContainer, northConstraint);
 		add(leftPanel, westConstraint);
 		add(centerPanel, centerConstraint);
 		add(rightPanel, eastConstraint);

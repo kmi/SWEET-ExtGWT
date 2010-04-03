@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.xml.rpc.ServiceException;
 
 import uk.ac.kmi.microwsmo.server.DomainOntologiesRetriever;
 import uk.ac.kmi.microwsmo.server.ServicePropertiesRetriever;
@@ -49,11 +50,14 @@ public class Watson extends HttpServlet {
 			// if the method is "sp" (Service Properties)
 			if( method.equals("sp") ) {
 				ServicePropertiesRetriever spRetriever = getServicePropertiesRetriever(request);
+				
 				result = spRetriever.getServiceProperties(keyword);
 				storeServiceProperties(request, keyword, result);
+				
 			// else if the method is "do" (Domain Ontologies)
 			} else if( method.equals("do") ) {
 				DomainOntologiesRetriever doRetriever = getDomainOntologiesRetriever(request);
+				
 				result = doRetriever.getDomainOntologies(keyword);
 				storeDomainOntologies(request, keyword, result);
 			}
@@ -82,7 +86,19 @@ public class Watson extends HttpServlet {
 	 */
 	private ServicePropertiesRetriever getServicePropertiesRetriever(HttpServletRequest request) {
 		HttpSession session = request.getSession(true);
-		return (ServicePropertiesRetriever) session.getAttribute("spRetriever");
+		
+		ServicePropertiesRetriever spRetriever = (ServicePropertiesRetriever) session.getAttribute("spRetriever"); 
+		
+		if(spRetriever == null){
+			try {
+				spRetriever = new ServicePropertiesRetriever();
+				session.setAttribute("spRetriever", spRetriever);
+			} catch (ServiceException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return spRetriever;
 	}
 	
 	/**
@@ -92,13 +108,28 @@ public class Watson extends HttpServlet {
 	 */
 	private DomainOntologiesRetriever getDomainOntologiesRetriever(HttpServletRequest request) {
 		HttpSession session = request.getSession(true);
-		return (DomainOntologiesRetriever) session.getAttribute("doRetriever");
+		DomainOntologiesRetriever doRetriever = (DomainOntologiesRetriever) session.getAttribute("doRetriever");
+		
+		if(doRetriever == null){
+			try {
+				doRetriever = new DomainOntologiesRetriever();
+				session.setAttribute("doRetriever", doRetriever);
+			} catch (ServiceException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return doRetriever;
 	}
 	
 	private void storeServiceProperties(HttpServletRequest request, String keyword, String result) {
 		HttpSession session = request.getSession(false);
 		if( session != null ) {
 			SemanticTreesModel model = (SemanticTreesModel) session.getAttribute("treesModel");
+			if(model == null){
+				session.setAttribute("treesModel", new SemanticTreesModel());
+				model = (SemanticTreesModel) session.getAttribute("treesModel");
+			}
 			model.addServiceProperties(keyword, result);
 			session.setAttribute("treesModel", model);
 		}
@@ -108,6 +139,10 @@ public class Watson extends HttpServlet {
 		HttpSession session = request.getSession(false);
 		if( session != null ) {
 			SemanticTreesModel model = (SemanticTreesModel) session.getAttribute("treesModel");
+			if(model == null){
+				session.setAttribute("treesModel", new SemanticTreesModel());
+				model = (SemanticTreesModel) session.getAttribute("treesModel");
+			}
 			model.addDomainOntologies(keyword, result);
 			session.setAttribute("treesModel", model);
 		}

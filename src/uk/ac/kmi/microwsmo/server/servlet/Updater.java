@@ -1,5 +1,4 @@
 package uk.ac.kmi.microwsmo.server.servlet;
-
 import java.io.Console;
 import java.io.IOException;
 
@@ -31,7 +30,8 @@ public class Updater extends HttpServlet {
 	 */
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		createSession(request);
+		//java.io.
+		createSession(request);		
 	}
 	
 	@Override
@@ -42,9 +42,9 @@ public class Updater extends HttpServlet {
 		HttpSession session = request.getSession(true);
 		if (session != null){
 			if( method.equals("getSp") ) {
-				result = getServiceProperties(session);
+				//result = getServiceProperties(session);
 			} else if( method.equals("getDo") ) {
-				result = getDomainOntologies(session);
+				//result = getDomainOntologies(session);
 			}
 		}
 		
@@ -56,21 +56,26 @@ public class Updater extends HttpServlet {
 	
 	private void createSession(HttpServletRequest request) {
 		HttpSession session = request.getSession(true);
-		if( session.isNew() ) {
-			try {
-				ServicePropertiesRetriever spRetriever = new ServicePropertiesRetriever();
-				session.setAttribute("spRetriever", spRetriever);
-			} catch (ServiceException e) {
-				e.printStackTrace();
-			}
-			try {
-				DomainOntologiesRetriever doRetriever = new DomainOntologiesRetriever();
-				session.setAttribute("doRetriever", doRetriever);
-			} catch (ServiceException e) {
-				e.printStackTrace();
-			}
-			session.setAttribute("treesModel", new SemanticTreesModel());
+		//By reload of SWEET and an existing session, clear the session properties
+		if(!session.isNew() ) {
+			session.removeAttribute("spRetriever");
+			session.removeAttribute("doRetriever");
+			session.removeAttribute("treesModel");
 		}
+		
+		try {
+			ServicePropertiesRetriever spRetriever = new ServicePropertiesRetriever();
+			session.setAttribute("spRetriever", spRetriever);
+		} catch (ServiceException e) {
+			e.printStackTrace();
+		}
+		try {
+			DomainOntologiesRetriever doRetriever = new DomainOntologiesRetriever();
+			session.setAttribute("doRetriever", doRetriever);
+		} catch (ServiceException e) {
+			e.printStackTrace();
+		}
+		session.setAttribute("treesModel", new SemanticTreesModel());
 	}
 	
 	private String getServiceProperties(HttpSession session) {
