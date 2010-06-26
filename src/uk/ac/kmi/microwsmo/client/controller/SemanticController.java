@@ -32,6 +32,10 @@ final class SemanticController {
 				doTree.addRootItem(odLoadingItem);
 				generateServiceProperties(keyword, false);
 				generateDomainOntologies(keyword, false);
+				
+				//Logger
+				logEvents("ItemSearchWatson", "queryWatson", keyword);
+				
 			} else {
 				Message.show(Message.TERM_ALREADY_RETRIEVED, keyword);
 			}
@@ -40,6 +44,19 @@ final class SemanticController {
 			Message.show(Message.WATSON_SELECTION);
 		}
 	}
+	
+	public static native void logEvents(String item, String method, String element) /*-{
+	var httpRequest = @uk.ac.kmi.microwsmo.client.controller.ControllerToolkit::getXMLHttpRequest()();
+	if( httpRequest != null ) {
+		var parameters = "method=" +method + "&element=" + element + "&item=" + item;
+		httpRequest.open("POST", "../logger", true);
+		// set the header
+		httpRequest.setRequestHeader("content-type", "application/x-www-form-urlencoded");
+		httpRequest.setRequestHeader("content-length", parameters.length);
+		httpRequest.setRequestHeader("connection", "close");
+		httpRequest.send(parameters);
+	}
+	}-*/;
 	
 	public static void viewMore(String keyword) {
 		generateServiceProperties(keyword, true);

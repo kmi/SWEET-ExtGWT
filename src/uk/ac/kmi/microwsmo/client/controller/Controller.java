@@ -1,8 +1,6 @@
 package uk.ac.kmi.microwsmo.client.controller;
 
 import java.util.List;
-import java.lang.*;
-
 
 import uk.ac.kmi.microwsmo.client.MicroWSMOeditor;
 import uk.ac.kmi.microwsmo.client.util.ComponentID;
@@ -27,10 +25,12 @@ import com.extjs.gxt.ui.client.widget.Component;
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.user.client.Window;
 
+//import uk.ac.kmi.microwsmo.server.logger.LOG;
+
 /**
  * Is the controller of the Editor. This class implements
  * the listener of all the events. Every fired event is
- * retrieved by the unique istance of this class and managed
+ * retrieved by the unique instance of this class and managed
  * in different way, depend to the kind of the event.
  * 
  * @author KMi, The Open University
@@ -41,13 +41,31 @@ public final class Controller extends KeyListener implements Listener<ComponentE
 	private static final int ENTER = 13;
 	//public static Object currentSelection = null;
 	
+	//Logging
+	//static Category cat = Category.getInstance(Controller.class.getName());
+	//Logger logger = Logger.getLogger("Updater");
+
 	/**
 	 * Init the controller.
 	 */
 	public Controller() {
 		ComponentID.IDGenerator.init();
+		//cat.debug("Start of Controller()");
 	}
 
+	public static native void logEvents(String item, String method, String element) /*-{
+	var httpRequest = @uk.ac.kmi.microwsmo.client.controller.ControllerToolkit::getXMLHttpRequest()();
+	if( httpRequest != null ) {
+		var parameters = "method=" +method + "&element=" + element + "&item=" + item;
+		httpRequest.open("POST", "../logger", true);
+		// set the header
+		httpRequest.setRequestHeader("content-type", "application/x-www-form-urlencoded");
+		httpRequest.setRequestHeader("content-length", parameters.length);
+		httpRequest.setRequestHeader("connection", "close");
+		httpRequest.send(parameters);
+	}
+	}-*/;
+	
 	/**
 	 * Handles all the fired events.
 	 */
@@ -131,8 +149,13 @@ public final class Controller extends KeyListener implements Listener<ComponentE
 		textField.setValue(url);
 		// call the proxy
 		ControllerToolkit.callProxy(url);
+		
+		//Logger
+		logEvents("ItemCallProxy", "callProxy", url);
 		// reset the view and the model of the Service Structur tree and of the
 		resetDefaultState();
+		
+		//cat.info(new java.util.Date() + " browse()");
 	}
 	
 	/**
@@ -174,6 +197,8 @@ public final class Controller extends KeyListener implements Listener<ComponentE
 		ControllerToolkit.setSelectionParams();
 		//currentSelection = selection;
 		//System.out.println(currentSelection.get(0) + "" + currentSelection.get(1));
+		
+		//cat.info(new java.util.Date() + " saveSelection()");
 	}
 	
 	/**
@@ -195,6 +220,8 @@ public final class Controller extends KeyListener implements Listener<ComponentE
 			String itemId = item.getID();
 			HRESTController.annotate(itemId);
 		}
+		
+		//cat.info(new java.util.Date() + " hrestAnnotation()");
 	}
 	
 	/**
@@ -216,10 +243,15 @@ public final class Controller extends KeyListener implements Listener<ComponentE
 			if( keyword.toLowerCase().trim().equals(selection.toLowerCase().trim())||
 					keyword.toLowerCase().trim().contains(selection.toLowerCase().trim())) {
 				SemanticController.annotate(item.getID(), item.getIcon());
+				
+				//Logger
+				logEvents("ItemSemanticAnnotation", "semanticAnnotation", selection);
 			} else {
 				Message.show(Message.SEMANTIC_ANNOTATION);
 			}
 		}	
+		
+		//cat.info(new java.util.Date() + " semanticAnnotation()");
 	}
 	
 	private void disableEnableContextMenu(String componentID) {
@@ -243,14 +275,22 @@ public final class Controller extends KeyListener implements Listener<ComponentE
 	
 	private void queryWatson() {
 		SemanticController.queryWatson();
+		
+		//cat.info(new java.util.Date() + " queryWatson()");
 	}
 	
 	private void save() {
 		ControllerToolkit.save();
+		//Logger
+		logEvents("ItemSave", "save", "AnnotatedDocument");
+		//cat.info(new java.util.Date() + " save()");
 	}
 	
 	private void export() {
 		ControllerToolkit.export();
+		//Logger
+		logEvents("ItemExport", "export", "AnnotatedDocument");
+		//cat.info(new java.util.Date() + " export()");
 	}
 	
 	private void deleteEntity() {
@@ -259,7 +299,12 @@ public final class Controller extends KeyListener implements Listener<ComponentE
 		if( item.getKind() == BaseTreeItem.TERM ) {
 			ControllerToolkit.deleteElementByID(item.getID());
 			tree.removeItem(item);
+			
+			//Logger
+			logEvents("ItemDeleteSemAnnotation", "deleteEntity", item.getName());
 		}
+		
+		//cat.info(new java.util.Date() + " deleteEntity()");
 	}
 	
 	/**
@@ -291,18 +336,29 @@ public final class Controller extends KeyListener implements Listener<ComponentE
 									for( ModelData fourthLevelElement : fourthLevelList ) {
 										BaseTreeItem fourthLevelItem = (BaseTreeItem) fourthLevelElement;
 										HRESTController.deleteAnnotation(fourthLevelItem.getID());
+										
+										//Logger
+										logEvents("ItemDeleteHTMLAnnotation", "deleteAnnotation", fourthLevelItem.getID());
 									}
 								}
 								HRESTController.deleteAnnotation(thirdLevelItem.getID());
+								//Logger
+								logEvents("ItemDeleteHTMLAnnotation", "deleteAnnotation", thirdLevelItem.getID());
 							}
 						}
 						HRESTController.deleteAnnotation(secondLevelItem.getID());
+						//Logger
+						logEvents("ItemDeleteHTMLAnnotation", "deleteAnnotation", secondLevelItem.getID());
 					}
 				}
 				HRESTController.deleteAnnotation(firstLevelItem.getID());
+				//Logger
+				logEvents("ItemDeleteHTMLAnnotation", "deleteAnnotation", firstLevelItem.getID());
 			}
 		}
 		HRESTController.deleteAnnotation(selectedItem.getID());
+		//Logger
+		logEvents("ItemDeleteHTMLAnnotation", "deleteAnnotation", selectedItem.getID());
 		/*
 		 * delete the element inside the tree
 		 */
@@ -313,6 +369,8 @@ public final class Controller extends KeyListener implements Listener<ComponentE
 			// otherwise delete the selected element
 			tree.removeSelectedItem();
 		}
+		
+		//cat.info(new java.util.Date() + " deleteAnnotation()");
 	}
 	
 	private void viewMore() {
@@ -324,6 +382,8 @@ public final class Controller extends KeyListener implements Listener<ComponentE
 			String keyword = termItem.getID();
 			SemanticController.viewMore(keyword);
 		}
+		
+		//cat.info(new java.util.Date() + " viewMore()");
 	}
 	
 	private void retrieveConcepts() {
@@ -333,6 +393,8 @@ public final class Controller extends KeyListener implements Listener<ComponentE
 			item = tree.getParentOf(item);
 			SemanticController.retreiveConceptsOf(item.getID());
 		}
+		
+		//cat.info(new java.util.Date() + " retrieveConcepts()");
 	}
 	
 }

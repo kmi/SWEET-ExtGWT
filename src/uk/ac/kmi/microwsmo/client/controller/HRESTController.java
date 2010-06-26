@@ -50,16 +50,19 @@ final class HRESTController {
 			return range;
 		}
 	}-*/;
-	/*
-	  
-	  function getSelectionParent(r) {
-	    if(r.parentElement)
-	      return r.parentElement;
-	    else if(r.commonAncestorContainer)
-	      return r.commonAncestorContainer;
-	    else
-	      return false;
-	  }*/
+	
+	public static native void logEvents(String HRESTAnn, String element) /*-{
+	var httpRequest = @uk.ac.kmi.microwsmo.client.controller.ControllerToolkit::getXMLHttpRequest()();
+	if( httpRequest != null ) {
+		var parameters = "method=HRESTAnn&item=ItemHTMLAnnotation&element=" + element;
+		httpRequest.open("POST", "../logger", true);
+		// set the header
+		httpRequest.setRequestHeader("content-type", "application/x-www-form-urlencoded");
+		httpRequest.setRequestHeader("content-length", parameters.length);
+		httpRequest.setRequestHeader("connection", "close");
+		httpRequest.send(parameters);
+	}
+	}-*/;
 	
 	/**
 	 * Annotate the web page with the hrest tag.
@@ -83,6 +86,10 @@ final class HRESTController {
 						 try {
 						 	//Not working properly
 	                    	range.surroundContents(element);
+	                    	
+	                    	//Logger
+	                    	//console.log(element.id);
+	            			@uk.ac.kmi.microwsmo.client.controller.HRESTController::logEvents(Ljava/lang/String;Ljava/lang/String;)("HRESTAnn",hrestTag);
 	                     
 	                     } catch (Error) {
 	                     	//LoggingConsole
@@ -178,9 +185,10 @@ final class HRESTController {
 		         					parent.appendChild(nodesAfterSelection[g]);
 	      						}
 	      						
-	      						//console.log(range);
-	                     	
-	                     	
+	      					//Logger
+	      					//console.log(element.id);
+	                    	@uk.ac.kmi.microwsmo.client.controller.HRESTController::logEvents(Ljava/lang/String;Ljava/lang/String;)("HRESTAnn",hrestTag);
+	                     
 				            //@uk.ac.kmi.microwsmo.client.util.Message::show(Ljava/lang/String;)
 							//(@uk.ac.kmi.microwsmo.client.util.Message::DIV_ELEMENT);
 				        }

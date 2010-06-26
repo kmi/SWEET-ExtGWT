@@ -23,6 +23,10 @@ import org.w3c.dom.Document;
 import org.w3c.tidy.Tidy;
 import org.xml.sax.InputSource;
 
+import uk.ac.kmi.microwsmo.server.logger.InitializeLogger;
+import uk.ac.kmi.microwsmo.server.logger.URI;
+import uk.ac.kmi.microwsmo.server.logger.URIImpl;
+
 /**
  * This servlet transform an HTML file in a XML file. It
  * can be called only by a POST method. If is called by a
@@ -35,6 +39,7 @@ public class Export extends HttpServlet {
 	private static final long serialVersionUID = -4142113565472752463L;
 	private static String webAppRoot;
 	private static File xsltFile;
+	private InitializeLogger loggerInit = null;
 	
 	@Override
 	public void init(ServletConfig config) throws ServletException {
@@ -54,15 +59,33 @@ public class Export extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession(false);
+		
+		Tidy parser = new Tidy();
+		Document document = null;
+		
 		if( session != null ) {
 			// parse the html page
-			Document document = getDOM(session);
+			String innerHTML = (String) session.getAttribute("html");
+			InputSource source = new InputSource(new ByteArrayInputStream(innerHTML.getBytes()));
+			document = parser.parseDOM(source.getByteStream(), null);
+			// create a new transformer object from the "hrests.xslt"
+			Transformer transformer = getTransformer(response);
+			// transforms the page and export it in an RDF/XML file
+			export(document, transformer, response);
+		}
+		//Quick fix for the session null problem
+		else{
+			InputSource source = new InputSource(new ByteArrayInputStream(Export.html.getBytes()));
+			document = parser.parseDOM(source.getByteStream(), null);
 			// create a new transformer object from the "hrests.xslt"
 			Transformer transformer = getTransformer(response);
 			// transforms the page and export it in an RDF/XML file
 			export(document, transformer, response);
 		}
 	}
+	
+	//Quick fix for the session null problem
+	public static String html = "";
 	
 	/**
 	 * Export in RDF an HTML page.
@@ -72,29 +95,34 @@ public class Export extends HttpServlet {
 		HttpSession session = request.getSession(true);
 	    // retrieve the web page's html code
 	    String innerHtml = request.getParameter("html");
-	    session.setAttribute("html", innerHtml);
+	    String processId = "";
+		String documentUri = "";
+		URI sessionId = new URIImpl("http://www.soa4all.eu/session/sessionLost");
+		
+		if (session != null ){
+			session.setAttribute("html", innerHtml);
+    	
+	    	processId = (String) session.getAttribute("processId");
+	    	documentUri = (String) session.getAttribute("apiURL");
+	    	sessionId = new URIImpl("http://www.soa4all.eu/session/"+ session.getId());
+		}
+		else {
+			processId = "http://www.soa4all.eu/process/sessionLost";
+			documentUri = "http://www.soa4all.eu/documentUri/sessionLost";
+		}
+	    
+	    initializeLogger();
+	    loggerInit.addExportedItem("ExportedDocument", sessionId, "Export", processId, documentUri);
+	    
+	   
+	    Export.html = innerHtml;
+	    
 	    response.setContentType("text/html");
 	    ServletOutputStream out = response.getOutputStream();
 	    out.print("ok");
 	    out.close();
 	}
 	
-	/**
-	 * Returns the DOM interface from a given html file.
-	 * 
-	 * @param inFile the html file.
-	 * @param response the output interface of the servlet.
-	 * @return a DOM
-	 * @throws IOException
-	 */
-	private Document getDOM(HttpSession session) throws IOException {
-		Tidy parser = new Tidy();
-		Document document = null;
-		String innerHTML = (String) session.getAttribute("html");
-		InputSource source = new InputSource(new ByteArrayInputStream(innerHTML.getBytes()));
-		document = parser.parseDOM(source.getByteStream(), null);
-		return document;
-	}
 	
 	/**
 	 * Returns a transformer object, which transforms the xhtml document in a
@@ -136,6 +164,11 @@ public class Export extends HttpServlet {
 			response.sendRedirect("error-page.jsp?msg=" + e.getMessage() + "&own=" + e.getClass().getName());
 		}
 		out.close();
+	}
+	
+	private void initializeLogger() {
+		if(loggerInit ==null)
+			loggerInit = new InitializeLogger();
 	}
 
 }

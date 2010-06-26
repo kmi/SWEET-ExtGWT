@@ -11,12 +11,14 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.tidy.Tidy;
+import java.util.UUID;
 
 /**
  * This servlet is basically a proxy. It retrieve the web page and send it back
@@ -52,6 +54,16 @@ public class Proxy extends HttpServlet {
 		String address = request.getParameter("url");
 		// decodes the url
 		address = URLDecoder.decode(address, "UTF-8");
+		
+		//Save the address in the session
+		HttpSession session = request.getSession(true);
+	    session.setAttribute("apiURL", address);
+	    
+	    //Create a new process and put it in the session
+	    String Id = UUID.randomUUID().toString();
+	    String processID = "http://www.soa4all.eu/process/"+ Id;
+	    session.setAttribute("processId", processID);
+	    
 		// instantiates a new URL object
 		url = new URL(address);
 		// create a DOM from the web page

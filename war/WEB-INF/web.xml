@@ -64,6 +64,14 @@
 		<servlet-class>
 		uk.ac.kmi.microwsmo.server.servlet.SaveToRepository</servlet-class>
 	</servlet>
+	<servlet>
+		<description>
+		</description>
+		<display-name>logger</display-name>
+		<servlet-name>logger</servlet-name>
+		<servlet-class>
+		uk.ac.kmi.microwsmo.server.servlet.Logger</servlet-class>
+	</servlet>
 	<servlet-mapping>
 		<servlet-name>proxy</servlet-name>
 		<url-pattern>/proxy</url-pattern>
@@ -95,6 +103,10 @@
 	<servlet-mapping>
 		<servlet-name>savetorepo</servlet-name>
 		<url-pattern>/savetorepo</url-pattern>
+	</servlet-mapping>	
+	<servlet-mapping>
+		<servlet-name>logger</servlet-name>
+		<url-pattern>/logger</url-pattern>
 	</servlet-mapping>
 	
 	<welcome-file-list>

@@ -12,6 +12,10 @@ import javax.xml.rpc.ServiceException;
 
 import uk.ac.kmi.microwsmo.server.DomainOntologiesRetriever;
 import uk.ac.kmi.microwsmo.server.ServicePropertiesRetriever;
+import uk.ac.kmi.microwsmo.server.logger.InitializeLogger;
+import uk.ac.kmi.microwsmo.server.logger.LogManager;
+import uk.ac.kmi.microwsmo.server.logger.RDFRepositoryException;
+import uk.ac.kmi.microwsmo.server.logger.URI;
 import uk.ac.kmi.microwsmo.server.model.SemanticTreesModel;
 
 import org.apache.log4j.Logger;

@@ -23,6 +23,8 @@ import uk.ac.kmi.microwsmo.server.model.SemanticTreesModel;
  */
 public class Watson extends HttpServlet {
 	
+	static org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(Watson.class.getName());
+	
 	private static final long serialVersionUID = 3703751098039606931L;
 	
 	/**
@@ -132,6 +134,8 @@ public class Watson extends HttpServlet {
 			}
 			model.addServiceProperties(keyword, result);
 			session.setAttribute("treesModel", model);
+			
+			logger.info(new java.util.Date() + "; get service properties; " + keyword + "; " +session);
 		}
 	}
 	
@@ -145,6 +149,8 @@ public class Watson extends HttpServlet {
 			}
 			model.addDomainOntologies(keyword, result);
 			session.setAttribute("treesModel", model);
+			
+			logger.info(new java.util.Date() + "; get domain ontologies; " + keyword + "; " +session);
 		}
 	}
 
