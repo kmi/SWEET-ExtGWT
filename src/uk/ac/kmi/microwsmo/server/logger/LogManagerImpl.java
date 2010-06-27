@@ -128,11 +128,11 @@ public class LogManagerImpl implements LogManager {
 			repoModel.addStatement(logEntryInst, directTypeUri, logEntryUri);
 			//repoModel.addStatement(logEntryInst, hasActionUri, actionInst);
 			
+			org.ontoware.rdf2go.model.node.URI documentInst = repoModel.createURI(documentUri);
 			org.ontoware.rdf2go.model.node.URI processInst = repoModel.createURI(processId);
 			repoModel.addStatement(logEntryInst, hasProcessUri, processInst);
 			
-			
-			org.ontoware.rdf2go.model.node.URI documentInst = repoModel.createURI(documentUri);
+			//org.ontoware.rdf2go.model.node.URI documentInst = repoModel.createURI(documentUri);
 			repoModel.addStatement(processInst, hasHTMLDocumentUri, documentInst);
 			repoModel.addStatement(processInst, hasActionUri, actionInst);
 			// FIXME 

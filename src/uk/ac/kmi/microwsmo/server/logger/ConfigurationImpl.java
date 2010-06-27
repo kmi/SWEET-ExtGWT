@@ -48,6 +48,18 @@ public class ConfigurationImpl implements Configuration {
 			return props.getProperty ("logRepoName");
 		return null;
 	}
+	
+	public String getProxyHostName() {
+		if ( props != null )
+			return props.getProperty ("proxyHostName");
+		return null;
+	}
+
+	public String getProxyPort() {
+		if ( props != null )
+			return props.getProperty ("proxyPort");
+		return null;
+	}
 
 	/*public URI getServiceRepositoryServerUri() {
 		if ( props != null )

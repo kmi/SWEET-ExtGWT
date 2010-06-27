@@ -95,20 +95,23 @@ public class Export extends HttpServlet {
 		HttpSession session = request.getSession(true);
 	    // retrieve the web page's html code
 	    String innerHtml = request.getParameter("html");
-	    String processId = "";
-		String documentUri = "";
+	    String processId = "http://www.soa4all.eu/process/sessionLost";
+		String documentUri = "http://www.soa4all.eu/documentUri/sessionLost";
 		URI sessionId = new URIImpl("http://www.soa4all.eu/session/sessionLost");
+		long currentTime = System.currentTimeMillis();
 		
 		if (session != null ){
 			session.setAttribute("html", innerHtml);
     	
 	    	processId = (String) session.getAttribute("processId");
 	    	documentUri = (String) session.getAttribute("apiURL");
+	    	if( processId == null || processId.trim() == "" ){
+				 processId = "http://www.soa4all.eu/process/sessionEmpty" +currentTime;
+			 }
+			 if( documentUri == null || documentUri.trim() == "" ){
+				 documentUri= "http://www.soa4all.eu/documentUri/sessionEmpty" + currentTime;
+			 }
 	    	sessionId = new URIImpl("http://www.soa4all.eu/session/"+ session.getId());
-		}
-		else {
-			processId = "http://www.soa4all.eu/process/sessionLost";
-			documentUri = "http://www.soa4all.eu/documentUri/sessionLost";
 		}
 	    
 	    initializeLogger();

@@ -392,7 +392,12 @@ final class SemanticController {
 						attribute.value = url;
 						element.setAttributeNode(attribute);
 						// add the element to the DOM
-						range.surroundContents(element);
+					
+						//range.surroundContents(element);
+						element.appendChild(range.extractContents());
+						//console.log(range.extractContents());
+						range.insertNode(element);
+						
 						// add the new element to the Annotations's tree
 						@uk.ac.kmi.microwsmo.client.controller.SemanticController::populateAnnotations(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)(url,id, icon);
 					}
@@ -409,5 +414,4 @@ final class SemanticController {
 		    (@uk.ac.kmi.microwsmo.client.util.Message::ANNOTATION_SELECTION);
 		}
 	}-*/;
-	
 }

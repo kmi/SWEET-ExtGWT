@@ -112,13 +112,6 @@ public class InitializeLogger {
 		//return result;
 	}
 	
-	/**
-	 * 
-	 * @param element
-	 * @param content
-	 * @param agentUri
-	 * @param method
-	 */
 	//OK (element, method, sessionId, method, processId, documentUri);
 	public void addHTMLAnnotatedItem(String element, String content, URI agentUri, String method, String processId, String documentUri) {
 		//URI result = managerFacade2Go.addDocument(name, content);

@@ -92,6 +92,9 @@ public final class ControllerToolkit {
 	public static native String getTextSelected() /*-{
 		var webPage = @uk.ac.kmi.microwsmo.client.controller.ControllerToolkit::getWebPage()();
 		var selection = webPage.contentDocument.getSelection(); 
+		
+		//console.log(webPage.contentDocument);
+		//console.log(selection);
 		return @uk.ac.kmi.microwsmo.client.controller.ControllerToolkit::trim(Ljava/lang/String;)(selection);
 	}-*/;
 	

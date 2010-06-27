@@ -51,8 +51,10 @@ import uk.ac.kmi.microwsmo.server.model.SemanticTreesModel;
 			String method = request.getParameter("method");
 			String element = request.getParameter("element");
 			String result = "";
-			String processId = "";
-			String documentUri = "";
+			String processId = "http://www.soa4all.eu/process/sessionLost";
+			String documentUri = "http://www.soa4all.eu/documentUri/sessionLost";
+			sessionId = new URIImpl("http://www.soa4all.eu/session/sessionLost");
+			long currentTime = System.currentTimeMillis();
 			
 			initializeLogger();
 			
@@ -60,14 +62,16 @@ import uk.ac.kmi.microwsmo.server.model.SemanticTreesModel;
 			if (session != null ){
 			 processId = (String) session.getAttribute("processId");
 			 documentUri = (String) session.getAttribute("apiURL");
+			 
+			 if( processId == null || processId.trim() == "" ){
+				 processId = "http://www.soa4all.eu/process/sessionEmpty"+currentTime;
+			 }
+			 if( documentUri == null || documentUri.trim() == "" ){
+				 documentUri= "http://www.soa4all.eu/documentUri/sessionEmpty"+currentTime;
+			 }
+			 
 			 sessionId = new URIImpl("http://www.soa4all.eu/session/"+ session.getId());
-			}
-			else {
-				processId = "http://www.soa4all.eu/process/sessionLost";
-				documentUri = "http://www.soa4all.eu/documentUri/sessionLost";
-				sessionId = new URIImpl("http://www.soa4all.eu/session/sessionLost");
-			}
-			
+			}			
 				
 			if ( (LOG.Item_Export).endsWith(item) ) {
 				loggerInit.addExportedItem(element, sessionId,  method, processId, documentUri);

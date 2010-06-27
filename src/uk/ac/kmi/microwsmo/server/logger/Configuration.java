@@ -17,11 +17,11 @@ public interface Configuration {
 
 	//public String getLogRepositoryServerUri();
 
-	/*public String getProxyHostName();
+	public String getProxyHostName();
 
 	public String getProxyPort();
 
-	public String getDocumentFolder();
+	/*public String getDocumentFolder();
 
 	public String getHRestsXsltPath();*/
 
