@@ -242,7 +242,7 @@ public final class Controller extends KeyListener implements Listener<ComponentE
 		if( item.getKind() == BaseTreeItem.ENTITY) {
 			if( keyword.toLowerCase().trim().equals(selection.toLowerCase().trim())||
 					keyword.toLowerCase().trim().contains(selection.toLowerCase().trim())) {
-				SemanticController.annotate(item.getID(), item.getIcon());
+				SemanticController.annotate(item.getID(), item.getIcon(), selection.toLowerCase().trim());
 				
 				//Logger
 				logEvents("ItemSemanticAnnotation", "semanticAnnotation", selection);

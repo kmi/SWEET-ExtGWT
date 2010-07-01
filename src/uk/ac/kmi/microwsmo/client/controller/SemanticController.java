@@ -353,9 +353,12 @@ final class SemanticController {
 		}
 	}
 	
-	private static void populateAnnotations(String url, String id, String icon) {
+	private static void populateAnnotations(String url, String id, String icon, String sel) {
 		AnnotationsTree tree = MicroWSMOeditor.getAnnotationsTree();
 		String keyword = ControllerToolkit.getTextSelected();
+		if(keyword.trim() == "" || keyword == null){
+			keyword = sel;
+		}
 		BaseTreeItem root = new BaseTreeItem(keyword, CSSIconImage.TERM);
 		root.setID(id);
 		tree.addRootItem(root);
@@ -364,7 +367,7 @@ final class SemanticController {
 		tree.addItem(root, child);
 	}
 	
-	public static native void annotate(String url, String icon) /*-{
+	public static native void annotate(String url, String icon, String sel) /*-{
 		try {
 			// retrieves the selection inside the iframe
 			var selection = @uk.ac.kmi.microwsmo.client.controller.ControllerToolkit::getSelection()(); 
@@ -395,11 +398,11 @@ final class SemanticController {
 					
 						//range.surroundContents(element);
 						element.appendChild(range.extractContents());
-						//console.log(range.extractContents());
+						//console.log(sel);
 						range.insertNode(element);
 						
 						// add the new element to the Annotations's tree
-						@uk.ac.kmi.microwsmo.client.controller.SemanticController::populateAnnotations(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)(url,id, icon);
+						@uk.ac.kmi.microwsmo.client.controller.SemanticController::populateAnnotations(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)(url,id, icon, sel);
 					}
 				} catch (Error) {
 					@uk.ac.kmi.microwsmo.client.util.Message::show(Ljava/lang/String;)
