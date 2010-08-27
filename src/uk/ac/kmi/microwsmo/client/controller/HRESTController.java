@@ -3,6 +3,7 @@ package uk.ac.kmi.microwsmo.client.controller;
 import uk.ac.kmi.microwsmo.client.MicroWSMOeditor;
 import uk.ac.kmi.microwsmo.client.util.CSSIconImage;
 import uk.ac.kmi.microwsmo.client.util.ComponentID;
+import uk.ac.kmi.microwsmo.client.util.ComponentID.AnnotationClass;
 import uk.ac.kmi.microwsmo.client.view.BaseTreeItem;
 import uk.ac.kmi.microwsmo.client.view.HrestTagsTree;
 import uk.ac.kmi.microwsmo.client.view.ServiceStructureTree;
@@ -12,7 +13,7 @@ import uk.ac.kmi.microwsmo.client.view.ServiceStructureTree;
  * 
  * @author KMi, The Open University
  */
-final class HRESTController {
+public final class HRESTController {
 	
 	/*var rangeObject = getRangeObject(userSelection);
 
@@ -453,10 +454,15 @@ final class HRESTController {
 	private static void updateServiceStructureTree(String parentID, String childID) {
 		ServiceStructureTree tree = MicroWSMOeditor.getServiceStructureTree();
 		BaseTreeItem parent = tree.getItemById(parentID);
-		tree.addItem(parent, new BaseTreeItem(childID, CSSIconImage.FOLDER_CLOSED));
+		
+		if (childID.equals(AnnotationClass.SERVICE)){
+			tree.addItem(parent, new BaseTreeItem(childID, CSSIconImage.SERVICE));
+		} else{
+			tree.addItem(parent, new BaseTreeItem(childID, CSSIconImage.FOLDER_CLOSED));
+		}
 	}
 	
-	private static void updateHrestTagsTree(String hrestTag) {
+	public static void updateHrestTagsTree(String hrestTag) {
 		if( hrestTag.startsWith("service") ) {
 			if( ComponentID.IDGenerator.isTheFirstServiceTag() ) {
 				HRESTController.setFirstHrestLevel(true);

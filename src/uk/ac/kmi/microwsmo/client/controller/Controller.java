@@ -95,10 +95,9 @@ public final class Controller extends KeyListener implements Listener<ComponentE
 				viewMore();
 			} else if( componentID.contains(ComponentID.DOMAIN_ONTOLOGIES_TREE) ) {
 				retrieveConcepts();
-			} else if( componentID.equals(ComponentID.SERVICE_STRUCTURE_CONTEXT_MENU) ) {
-				deleteAnnotation();
-			}
-			
+			}  //else if( componentID.contains(ComponentID.SERVICE_STRUCTURE_CONTEXT_MENU) ) {
+				//deleteAnnotation();
+			//}
 		} else if( eventType.equals(Events.OnDoubleClick) ) {
 			if( componentID.equals(ComponentID.HREST_TAGS_TREE) ) {
 				saveSelection();
@@ -118,7 +117,7 @@ public final class Controller extends KeyListener implements Listener<ComponentE
 			} else if( componentID.contains(ComponentID.DOMAIN_ONTOLOGIES_CONTEXT_MENU) ) {
 				disableEnableContextMenu(componentID);
 			}
-		}
+		} 
 	}
 	
 	public native void prova() /*-{
@@ -306,11 +305,12 @@ public final class Controller extends KeyListener implements Listener<ComponentE
 		
 		//cat.info(new java.util.Date() + " deleteEntity()");
 	}
+
 	
 	/**
 	 * 
 	 */
-	private void deleteAnnotation() {
+	public static void deleteAnnotation() {
 		// retrieve the service structure tree
 		ServiceStructureTree tree = MicroWSMOeditor.getServiceStructureTree();
 		BaseTreeItem selectedItem = tree.getSelectedItem();

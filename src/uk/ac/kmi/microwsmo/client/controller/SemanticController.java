@@ -396,10 +396,14 @@ final class SemanticController {
 						element.setAttributeNode(attribute);
 						// add the element to the DOM
 					
-						//range.surroundContents(element);
-						element.appendChild(range.extractContents());
-						//console.log(sel);
-						range.insertNode(element);
+						 try {
+						 	//Not working properly
+							range.surroundContents(element);
+						} catch (Error) {
+							element.appendChild(range.extractContents());
+							//console.log(sel);
+							range.insertNode(element);
+						}
 						
 						// add the new element to the Annotations's tree
 						@uk.ac.kmi.microwsmo.client.controller.SemanticController::populateAnnotations(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)(url,id, icon, sel);

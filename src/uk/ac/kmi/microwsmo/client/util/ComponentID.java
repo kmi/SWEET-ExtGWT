@@ -1,5 +1,7 @@
 package uk.ac.kmi.microwsmo.client.util;
 
+import com.extjs.gxt.ui.client.widget.menu.MenuItem;
+
 
 public abstract class ComponentID {
 	
@@ -16,6 +18,9 @@ public abstract class ComponentID {
 	public static String EXPORT_LOCAL_MENU = "exportLocalMenu";
 	public static String EXPORT_REPOSITORY_MENU = "exportRepositoryMenu";
 	public static String SERVICE_STRUCTURE_CONTEXT_MENU = "serviceStructureContextMenu";
+	public static String SERVICE_STRUCTURE_CONTEXT_MENU_DELETE = "deleteServiceProperty";
+	public static String SERVICE_STRUCTURE_CONTEXT_MENU_RENAME = "renameServiceProperty";
+	public static String SERVICE_STRUCTURE_CONTEXT_MENU_ADDMREF = "addModelReference";
 	public static String SERVICE_STRUCTURE_PANEL = "serviceStructurePanel";
 	public static String SERVICE_STRUCTURE_TREE = "serviceStructureTree";
 	public static String HREST_PANEL = "hrestPanel";
@@ -86,6 +91,19 @@ public abstract class ComponentID {
 			}
 		}
 		
+	}
+	
+	
+	public abstract static class AnnotationClass {	
+		/* the ServiceClass constants */
+		public static final String SERVICE = "service";
+		public static final String LABEL = "label";
+		public static final String METHOD = "method";
+		public static final String ADDRESS = "address";
+		public static final String OPERATION = "operation";
+		public static final String INPUT = "input";
+		public static final String OUTPUT = "output";
+		public static final String ENTITY = "entity";
 	}
 	
 	public static class IDGenerator {

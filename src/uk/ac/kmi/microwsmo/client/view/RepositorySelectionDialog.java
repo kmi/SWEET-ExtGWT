@@ -45,6 +45,8 @@ public class RepositorySelectionDialog extends Dialog {
 		repository.setAllowBlank(false);
 		repository.setWidth(350);
 		repository.setEmptyText("e.g. http://repository.open.ac.uk");
+		//Default repository
+		repository.setValue("http://iserve.kmi.open.ac.uk");
 		add(repository);
 
 		userName = new TextField<String>();
