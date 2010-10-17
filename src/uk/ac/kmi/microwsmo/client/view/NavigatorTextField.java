@@ -18,7 +18,7 @@ public final class NavigatorTextField extends TextField<String> {
 	public NavigatorTextField() {
 		super();
 		setID(ComponentID.NAVIGATOR_TEXT_FIELD);
-		setEmptyText("insert the the web page's URI (e.g. http://www.domain.org)");
+		setEmptyText("insert the the web page's URI (e.g. http://www.domain.org) and press Enter");
 		addListener(Events.OnKeyPress, MicroWSMOeditor.getController());
 	}
 	

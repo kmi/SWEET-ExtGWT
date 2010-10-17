@@ -64,6 +64,37 @@ public class BaseTreeItem extends BaseModelData {
 		}
 	}
 	
+	public BaseTreeItem(String name, String iconStyle, String nodeType) {
+		super();
+		setID(name);
+		setName(name);
+		setIcon(iconStyle);
+		setEnabled(true);
+		setVisible(true);
+		
+		if(iconStyle.equals(CSSIconImage.RDF) ) {
+			setSorterField("d");
+			kind = ONTOLOGY;
+		} else if( iconStyle.equals(CSSIconImage.ONTO_CLASS) ) {
+			setSorterField("a");
+			kind = ENTITY;
+		} else if( iconStyle.equals(CSSIconImage.ONTO_PROPERTY) ) {
+			setSorterField("b");
+			kind = ENTITY;
+		} else if( iconStyle.equals(CSSIconImage.ONTO_INDIVIDUAL) ) {
+			setSorterField("c");
+			kind = ENTITY;
+		} else if( iconStyle.equals(CSSIconImage.TERM) ) {
+			setSorterField("d");
+			kind = TERM;
+		} else {
+			setSorterField("d");
+			kind = SIMPLE_ITEM;
+		}
+		
+		setNodeType(nodeType);
+	}
+	
 	public int getKind() {
 		return kind;
 	}
@@ -79,6 +110,38 @@ public class BaseTreeItem extends BaseModelData {
 	
 	public String getIcon() {
 		return get("icon");
+	}
+	
+	public void setNodeType(String nodeType) {
+		set("nodeType", nodeType);
+	}
+	
+	public String getNodeType() {
+		return get("nodeType");
+	}
+	
+	public void setModelReference(String modelReference) {
+		set("modelReference", modelReference);
+	}
+	
+	public String getModelReference() {
+		return get("modelReference");
+	}
+	
+	public void setLoweringSchemaMapping(String loweringSchemaMapping) {
+		set("loweringSchemaMapping", loweringSchemaMapping);
+	}
+	
+	public String getLoweringSchemaMapping() {
+		return get("loweringSchemaMapping");
+	}
+	
+	public void setLiftingSchemaMapping(String liftingSchemaMapping) {
+		set("liftingSchemaMapping", liftingSchemaMapping);
+	}
+	
+	public String getLiftingSchemaMapping() {
+		return get("liftingSchemaMapping");
 	}
 	
 	public void setSorterField(String nameField) {

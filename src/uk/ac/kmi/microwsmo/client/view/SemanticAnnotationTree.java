@@ -1,13 +1,19 @@
 package uk.ac.kmi.microwsmo.client.view;
 
 import uk.ac.kmi.microwsmo.client.MicroWSMOeditor;
+import uk.ac.kmi.microwsmo.client.controller.Controller;
 import uk.ac.kmi.microwsmo.client.util.ComponentID;
 
 import com.extjs.gxt.ui.client.event.Events;
+import com.extjs.gxt.ui.client.event.MenuEvent;
+import com.extjs.gxt.ui.client.event.SelectionListener;
+import com.extjs.gxt.ui.client.widget.menu.MenuItem;
+
 
 public abstract class SemanticAnnotationTree extends BaseTree {
 
 	private SemanticAnnotationContextMenu contextMenu;
+
 	
 	public SemanticAnnotationTree(String id) {
 		super(ComponentID.SEMANTIC_ANNOTATION_TREE + id);

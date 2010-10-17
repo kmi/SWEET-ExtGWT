@@ -1,10 +1,34 @@
+/**
+ * Copyright (c) 2010 KMi, The Open University <m.maleshkova@open.ac.uk>
+ * 
+ * This file is part of SWEET
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ **/
+
 package uk.ac.kmi.microwsmo.client.controller;
 
 import java.util.List;
 
+import org.eclipse.swt.internal.carbon.AlertStdCFStringAlertParamRec;
+
 import uk.ac.kmi.microwsmo.client.MicroWSMOeditor;
+import uk.ac.kmi.microwsmo.client.util.CSSIconImage;
 import uk.ac.kmi.microwsmo.client.util.ComponentID;
 import uk.ac.kmi.microwsmo.client.util.Message;
+import uk.ac.kmi.microwsmo.client.util.ComponentID.AnnotationClass;
+import uk.ac.kmi.microwsmo.client.util.ComponentID.IDGenerator;
+import uk.ac.kmi.microwsmo.client.view.AddLiftingLoweringSchema;
 import uk.ac.kmi.microwsmo.client.view.AnnotationsTree;
 import uk.ac.kmi.microwsmo.client.view.BaseTreeItem;
 import uk.ac.kmi.microwsmo.client.view.DomainOntologiesTree;
@@ -15,17 +39,21 @@ import uk.ac.kmi.microwsmo.client.view.ServicePropertiesTree;
 import uk.ac.kmi.microwsmo.client.view.ServiceStructureTree;
 import uk.ac.kmi.microwsmo.client.view.deprecated.DeprecatedBaseTreeItem;
 
+import com.extjs.gxt.ui.client.Style.HorizontalAlignment;
 import com.extjs.gxt.ui.client.data.ModelData;
 import com.extjs.gxt.ui.client.event.ComponentEvent;
 import com.extjs.gxt.ui.client.event.EventType;
 import com.extjs.gxt.ui.client.event.Events;
 import com.extjs.gxt.ui.client.event.KeyListener;
 import com.extjs.gxt.ui.client.event.Listener;
+import com.extjs.gxt.ui.client.event.MessageBoxEvent;
 import com.extjs.gxt.ui.client.widget.Component;
-import com.google.gwt.core.client.JsArrayString;
+import com.extjs.gxt.ui.client.widget.Dialog;
+import com.extjs.gxt.ui.client.widget.MessageBox;
+import com.extjs.gxt.ui.client.widget.button.Button;
+import com.extjs.gxt.ui.client.widget.layout.FormLayout;
 import com.google.gwt.user.client.Window;
-
-//import uk.ac.kmi.microwsmo.server.logger.LOG;
+import com.extjs.gxt.ui.client.widget.menu.MenuItem;
 
 /**
  * Is the controller of the Editor. This class implements
@@ -33,7 +61,8 @@ import com.google.gwt.user.client.Window;
  * retrieved by the unique instance of this class and managed
  * in different way, depend to the kind of the event.
  * 
- * @author KMi, The Open University
+ * @author Maria Maleshkova, The Open University
+ * @author Simone Spaccarotella, The Open University
  */
 public final class Controller extends KeyListener implements Listener<ComponentEvent> {
 	
@@ -103,6 +132,9 @@ public final class Controller extends KeyListener implements Listener<ComponentE
 				saveSelection();
 				
 				hrestAnnotation(sourceComponent);
+			} else if(componentID.equals(ComponentID.OWNONTOLOGY_TREE)){
+				
+				//TODO Event
 			}
 			
 		} else if( eventType.equals(Events.OnKeyPress) ) {
@@ -114,9 +146,11 @@ public final class Controller extends KeyListener implements Listener<ComponentE
 		} else if( eventType.equals(Events.OnMouseOver) ) {
 			if( componentID.contains(ComponentID.SEMANTIC_ANNOTATION_CONTEXT_MENU) ) {
 				disableEnableContextMenu(componentID);
-			} else if( componentID.contains(ComponentID.DOMAIN_ONTOLOGIES_CONTEXT_MENU) ) {
+			}/* else if( componentID.contains(ComponentID.DOMAIN_ONTOLOGIES_CONTEXT_MENU) ) {
 				disableEnableContextMenu(componentID);
-			}
+			} *//*else if( componentID.contains(ComponentID.SERVICE_STRUCTURE_CONTEXT_MENU) ) {
+				filterContextMenu(componentID);
+			}*/
 		} 
 	}
 	
@@ -146,6 +180,7 @@ public final class Controller extends KeyListener implements Listener<ComponentE
 		url = checkURL(url);
 		// and set again the value inside the field (i.e. if the user insert www.domain.org without http://)
 		textField.setValue(url);
+		
 		// call the proxy
 		ControllerToolkit.callProxy(url);
 		
@@ -153,7 +188,7 @@ public final class Controller extends KeyListener implements Listener<ComponentE
 		logEvents("ItemCallProxy", "callProxy", url);
 		// reset the view and the model of the Service Structur tree and of the
 		resetDefaultState();
-		
+
 		//cat.info(new java.util.Date() + " browse()");
 	}
 	
@@ -180,6 +215,7 @@ public final class Controller extends KeyListener implements Listener<ComponentE
 		MicroWSMOeditor.getHrestTagsTree().setDefaultState();
 		MicroWSMOeditor.getAnnotationsTree().setDefaultState();
 		MicroWSMOeditor.getServiceStructureTree().setDefaultState();
+		//MicroWSMOeditor.getOwnOntologyTree().setDefaultState();
 		ComponentID.IDGenerator.init();
 	}
 	
@@ -208,8 +244,6 @@ public final class Controller extends KeyListener implements Listener<ComponentE
 	 * @param component the item of the tree which fired the event.
 	 */
 	private void hrestAnnotation(Component component) {
-		// retrieve the item which fired the event
-		//Message.show(Message.INVALID_URI);//Toremove
 		saveSelection();
 		
 		HrestTagsTree tree = (HrestTagsTree) component;
@@ -223,54 +257,232 @@ public final class Controller extends KeyListener implements Listener<ComponentE
 		//cat.info(new java.util.Date() + " hrestAnnotation()");
 	}
 	
+	public static void loadOntology(String componentID) {
+		SemanticAnnotationTree tree = null;
+		MessageBox.alert("componentId", componentID, null);
+		if( componentID.contains(ComponentID.SERVICE_PROPERTIES_CONTEXT_MENU) ) {
+			tree = MicroWSMOeditor.getServicePropertiesTree();	
+		} else if( componentID.contains(ComponentID.DOMAIN_ONTOLOGIES_CONTEXT_MENU) ) {
+			tree = MicroWSMOeditor.getDomainOntologiesTree();
+		}
+		MessageBox.alert("tree", tree.toString(), null);
+		
+		BaseTreeItem treeItem = tree.getSelectedItem();
+		
+		MessageBox.alert("treeItem kind",treeItem.toString(), null);
+		
+		if( treeItem.getKind() == BaseTreeItem.ONTOLOGY) {
+			MessageBox.alert("treeItem id", treeItem.getID().toString(), null);
+			SemanticController.showOntoURLDialog(treeItem.getID());
+		}
+	}
+	
+	
+	
 	/**
 	 * 
 	 * @param componentID
 	 */
-	private void semanticAnnotation(String componentID) {
+	public static void semanticAnnotation(String componentID) {
 		SemanticAnnotationTree tree = null;
 		if( componentID.contains(ComponentID.SERVICE_PROPERTIES_CONTEXT_MENU) ) {
 			tree = MicroWSMOeditor.getServicePropertiesTree();	
 		} else if( componentID.contains(ComponentID.DOMAIN_ONTOLOGIES_CONTEXT_MENU) ) {
 			tree = MicroWSMOeditor.getDomainOntologiesTree();
 		}
-		BaseTreeItem item = tree.getSelectedItem();
-				
-		String keyword = tree.getParentOf(item).getID();
-		String selection = ControllerToolkit.getTextSelected();
-		if( item.getKind() == BaseTreeItem.ENTITY) {
-			if( keyword.toLowerCase().trim().equals(selection.toLowerCase().trim())||
-					keyword.toLowerCase().trim().contains(selection.toLowerCase().trim())) {
-				SemanticController.annotate(item.getID(), item.getIcon(), selection.toLowerCase().trim());
-				
-				//Logger
-				logEvents("ItemSemanticAnnotation", "semanticAnnotation", selection);
-			} else {
-				Message.show(Message.SEMANTIC_ANNOTATION);
-			}
-		}	
+		final BaseTreeItem treeItem = tree.getSelectedItem();
 		
-		//cat.info(new java.util.Date() + " semanticAnnotation()");
+		String keyword = tree.getParentOf(treeItem).getID();
+		final String sel = ControllerToolkit.getTextSelected();
+		
+		final String id = treeItem.getID();
+		final String icon = treeItem.getIcon();
+		
+		//was entity
+		final String newId = IDGenerator.getID("paramm");
+		
+		//Update HTML DOM
+		if( treeItem.getKind() == BaseTreeItem.ENTITY) {
+			if( !(keyword.toLowerCase().trim().equals(sel.toLowerCase().trim())||
+					keyword.toLowerCase().trim().contains(sel.toLowerCase().trim()))) {
+				
+				final Listener<MessageBoxEvent> l = new Listener<MessageBoxEvent>(){
+				      public void handleEvent(MessageBoxEvent ce) {
+				          Button btn = ce.getButtonClicked();
+				          if (btn.getText().toLowerCase().equals("no")){
+				          } else {
+				        	SemanticController.annotate(id, icon, sel.toLowerCase().trim(), newId);
+							
+							//Update semantic description tree
+							addSemanticAnnotationtoHRESTTree(sel, treeItem, newId);
+							//Logger
+							logEvents("ItemSemanticAnnotation", "semanticAnnotation", sel);
+				          }
+				        }
+					};
+						
+					MessageBox.confirm("Url Error", "The highlighted keyword doe not correspond to the chosen entity! Do you want to do the annotation anyway?", l);
+			} else {
+				SemanticController.annotate(id, icon, sel.toLowerCase().trim(), newId);
+				
+				//Update semantic description tree
+				addSemanticAnnotationtoHRESTTree(sel, treeItem, newId);
+				//Logger
+				logEvents("ItemSemanticAnnotation", "semanticAnnotation", sel);
+			}
+			
+		}
 	}
+	
+	public static void addSemanticAnnotationtoHRESTTree(String selection, BaseTreeItem item, String newId){
+		String parentId = HRESTController.addSemanticEntityToTree();
+		
+		ServiceStructureTree treeHREST = MicroWSMOeditor.getServiceStructureTree();
+		BaseTreeItem parent = treeHREST.getItemById(parentId);
+		
+		//if(parent.getNodeType().equals(AnnotationClass.INPUT) || parent.getNodeType().equals(AnnotationClass.OUTPUT)){
+			String label = selection.toLowerCase().trim(); 
+			if(!checkUniqueId(label)){
+				label = label + Math.floor(Math.random()*100);
+			}
+			
+			treeHREST.addItem(parent, new BaseTreeItem(newId, CSSIconImage.TERM, AnnotationClass.ENTITY));
+			BaseTreeItem newEntityElement = treeHREST.getItemById(newId);
+			
+			treeHREST.addItem(newEntityElement, new BaseTreeItem(label + ":" + item.getID(), CSSIconImage.MREF, AnnotationClass.MODELREFERENCE));
+			treeHREST.sortBy("nodeType");
+			
+			newEntityElement.setModelReference(item.getID());
+			
+			//Force to refresh the tree
+			treeHREST.recalculate();
+			treeHREST.collapseAll();
+			treeHREST.expandAll();
+			treeHREST.repaint();
+			
+			treeHREST.expandAll();
+	}
+	
+	public static boolean checkUniqueId(String item) {
+		ServiceStructureTree tree = MicroWSMOeditor.getServiceStructureTree();
+		List<ModelData> firstLevelList = tree.getChildren(tree.getItemById(AnnotationClass.TREEROOT));
+		
+		//Service nodes
+		if( firstLevelList != null ) {
+			for( ModelData firstLevelElement : firstLevelList ) {
+				BaseTreeItem firstLevelItem = (BaseTreeItem) firstLevelElement;
+				
+				if(firstLevelItem.getID().trim() == item.trim()){
+					return false;
+				}
+				
+				//Operation nodes
+				List<ModelData> secondLevelList = tree.getChildren(firstLevelItem);
+				if( secondLevelList != null ) {
+					for( ModelData secondLevelElement : secondLevelList ) {
+						BaseTreeItem secondLevelItem = (BaseTreeItem) secondLevelElement;
+						
+						if(secondLevelItem.getID().trim() == item.trim()){
+							return false;
+						}
+						
+						//Input/Output nodes
+						List<ModelData> thirdLevelList = tree.getChildren(secondLevelItem);
+						if( thirdLevelList != null ) {
+							for( ModelData thirdLevelElement : thirdLevelList ) {
+								BaseTreeItem thirdLevelItem = (BaseTreeItem) thirdLevelElement;
+								
+								if(thirdLevelItem.getID().trim() == item.trim()){
+									return false;
+								}
+							}
+						}
+			
+					}
+				}
+				
+			}
+		}
+		
+		return true;
+	}
+
 	
 	private void disableEnableContextMenu(String componentID) {
 		SemanticAnnotationTree tree = null;
 		if( componentID.contains(ComponentID.SERVICE_PROPERTIES_CONTEXT_MENU) ) {
 			tree = MicroWSMOeditor.getServicePropertiesTree();	
-		} else if( componentID.contains(ComponentID.DOMAIN_ONTOLOGIES_CONTEXT_MENU) ) {
+		} /*else if( componentID.contains(ComponentID.DOMAIN_ONTOLOGIES_CONTEXT_MENU) ) {
 			tree = MicroWSMOeditor.getDomainOntologiesTree();
-		}
+		}*/
 		BaseTreeItem item = tree.getSelectedItem();
 		
 		if( item.getKind() == BaseTreeItem.ENTITY) {
-			tree.getContextMenu().setVisible(true);
-			MicroWSMOeditor.getSemanticAnnotationContextMenu().setVisible(true);
+			//tree.getContextMenu().setVisible(true);
+			MenuItem annotaiton = (MenuItem) tree.getContextMenu().getItemByItemId("0");
+			//annotaiton.setEnabled(true);
+			annotaiton.setVisible(true);
+			//MenuItem loadontology = (MenuItem) tree.getContextMenu().getItemByItemId("1");
+			//loadontology.setEnabled(false);
+			//loadontology.setVisible(false);
+			
+			//MicroWSMOeditor.getSemanticAnnotationContextMenu().setVisible(true);
+			/*MenuItem annotaiton1 = (MenuItem) MicroWSMOeditor.getSemanticAnnotationContextMenu().getItemByItemId("0");
+			annotaiton1.setEnabled(true);
+			annotaiton1.setVisible(true);
+			MenuItem loadontology1 = (MenuItem) MicroWSMOeditor.getSemanticAnnotationContextMenu().getItemByItemId("1");
+			loadontology1.setEnabled(false);
+			loadontology1.setVisible(false);*/
 		}
-		else{
+		/*else if (item.getKind() == BaseTreeItem.ONTOLOGY ){
+			MenuItem annotaiton = (MenuItem) tree.getContextMenu().getItemByItemId("0");
+			//annotaiton.setEnabled(false);
+			annotaiton.setVisible(false);
+			MenuItem loadontology = (MenuItem) tree.getContextMenu().getItemByItemId("1");
+			//loadontology.setEnabled(true);
+			loadontology.setVisible(true);*/
+			
+			//MicroWSMOeditor.getSemanticAnnotationContextMenu().setVisible(true);
+			/*MenuItem annotaiton1 = (MenuItem) MicroWSMOeditor.getSemanticAnnotationContextMenu().getItemByItemId("0");
+			annotaiton1.setEnabled(false);
+			annotaiton1.setVisible(false);
+			MenuItem loadontology1 = (MenuItem) MicroWSMOeditor.getSemanticAnnotationContextMenu().getItemByItemId("1");
+			loadontology1.setEnabled(true);
+			loadontology1.setVisible(true);*/
+			
+		//}
+			else {
 			tree.getContextMenu().setVisible(false);
 			MicroWSMOeditor.getSemanticAnnotationContextMenu().setVisible(false);
 		}
 	}
+	
+	//Does not work properly
+	/*private void filterContextMenu(String componentID) {
+		ServiceStructureTree tree = MicroWSMOeditor.getServiceStructureTree();	
+		
+		BaseTreeItem item = tree.getSelectedItem();
+		
+		if( item.getNodeType().equals(AnnotationClass.MODELREFERENCE) 
+				|| item.getNodeType().equals(AnnotationClass.SCHEMAMAPPING)) {
+			
+			tree.getContextMenu().getItemByItemId("Rename").disable();
+			MicroWSMOeditor.getSemanticAnnotationContextMenu().getItemByItemId("Rename").disable();
+		
+		} else if (item.getNodeType().equals(AnnotationClass.MODELREFERENCE) || item.getID() == AnnotationClass.TREEROOT){
+			
+			if(tree.getParentOf(item).getNodeType().equals(AnnotationClass.ENTITY)){
+				tree.getContextMenu().getItemByItemId("Delete").disable();
+				MicroWSMOeditor.getSemanticAnnotationContextMenu().getItemByItemId("Delete").disable();
+			}
+		} else {
+			
+			tree.getContextMenu().getItemByItemId("Delete").enable();
+			MicroWSMOeditor.getSemanticAnnotationContextMenu().getItemByItemId("Delete").enable();
+			tree.getContextMenu().getItemByItemId("Rename").enable();
+			MicroWSMOeditor.getSemanticAnnotationContextMenu().getItemByItemId("Rename").enable();
+		}
+	}*/
 	
 	private void queryWatson() {
 		SemanticController.queryWatson();
@@ -314,6 +526,7 @@ public final class Controller extends KeyListener implements Listener<ComponentE
 		// retrieve the service structure tree
 		ServiceStructureTree tree = MicroWSMOeditor.getServiceStructureTree();
 		BaseTreeItem selectedItem = tree.getSelectedItem();
+		
 		/*
 		 * delete the element inside the web page. There are 4 level because
 		 * we need to delete all the hrest children of this element and the maximum
@@ -362,10 +575,37 @@ public final class Controller extends KeyListener implements Listener<ComponentE
 		/*
 		 * delete the element inside the tree
 		 */
-		if( selectedItem.getID().equals("hrest") ) {
+		if( selectedItem.getNodeType().equals(AnnotationClass.TREEROOT)) {
 			// if the element is the hrest root then set the default state
 			tree.setDefaultState();
-		} else {
+			
+			List<ModelData> children = tree.getChildren(selectedItem);
+			if( children != null ) {
+				for( ModelData childElement : children ) {
+					BaseTreeItem childItem = (BaseTreeItem) childElement;
+					tree.removeItemById(childItem.getID());
+				}
+			}
+			//Force refresh tree;
+			tree.recalculate();
+			tree.collapseAll();
+			tree.expandAll();
+			tree.repaint();
+			
+			tree.expandAll();
+			
+		} /*else if (selectedItem.getNodeType().equals(AnnotationClass.MODELREFERENCE)){
+			
+				BaseTreeItem parent = tree.getParentOf(selectedItem);
+				
+				//If the parent is an ENTITY, it should be deleted as well
+				if(parent.getNodeType().equals(AnnotationClass.ENTITY)){
+					//DO not delete
+				}else {
+					tree.removeSelectedItem();
+				}
+				
+		}*/ else {
 			// otherwise delete the selected element
 			tree.removeSelectedItem();
 		}

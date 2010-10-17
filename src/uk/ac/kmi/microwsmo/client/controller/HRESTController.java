@@ -1,17 +1,37 @@
+/**
+ * Copyright (c) 2010 KMi, The Open University <m.maleshkova@open.ac.uk>
+ * 
+ * This file is part of SWEET
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ **/
+
 package uk.ac.kmi.microwsmo.client.controller;
 
 import uk.ac.kmi.microwsmo.client.MicroWSMOeditor;
 import uk.ac.kmi.microwsmo.client.util.CSSIconImage;
 import uk.ac.kmi.microwsmo.client.util.ComponentID;
+import uk.ac.kmi.microwsmo.client.util.Message;
 import uk.ac.kmi.microwsmo.client.util.ComponentID.AnnotationClass;
+import uk.ac.kmi.microwsmo.client.view.AddModelReferenceDialog;
 import uk.ac.kmi.microwsmo.client.view.BaseTreeItem;
 import uk.ac.kmi.microwsmo.client.view.HrestTagsTree;
+import uk.ac.kmi.microwsmo.client.view.RenameDialog;
 import uk.ac.kmi.microwsmo.client.view.ServiceStructureTree;
 
 /**
- * 
- * 
- * @author KMi, The Open University
+ * @author Maria Maleshkova, The Open University
+ * @author Simone Spaccarotella, The Open University
  */
 public final class HRESTController {
 	
@@ -75,11 +95,11 @@ public final class HRESTController {
 	    	var parentElementEnd = null;
 	    	
 	    	//console.log("range");
-	    	//console.log(range);
-	    	
+	    	//console.log(range);	    	
 	        try {
 	            //if (typeof range.surroundContents != "undefined") {
 	                var elementName = @uk.ac.kmi.microwsmo.client.util.ComponentID.HREST::getElement(Ljava/lang/String;)(hrestTag);
+	                
 	                if (elementName != null) {
 	                	var oldCode = @uk.ac.kmi.microwsmo.client.controller.ControllerToolkit::retrieveIframeHTML()();
 	                    var element = $doc.createElement(elementName);
@@ -206,8 +226,10 @@ public final class HRESTController {
 	                    	// annotate the web page
 	                    	var parentID = @uk.ac.kmi.microwsmo.client.controller.HRESTController::annotateWebPage(Ljava/lang/Object;Ljava/lang/String;)(element,hrestTag);
 	                    	// update the service structure tree
-	                    	@uk.ac.kmi.microwsmo.client.controller.HRESTController::updateServiceStructureTree(Ljava/lang/String;Ljava/lang/String;)(parentID, element.id);
+	                    	//console.log(parentID);
+	                    	@uk.ac.kmi.microwsmo.client.controller.HRESTController::updateServiceStructureTree(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)(parentID, element.id, hrestTag);
 	                    	// update the hrest tags tree
+	                    	//console.log(hrestTag);
 	                    	@uk.ac.kmi.microwsmo.client.controller.HRESTController::updateHrestTagsTree(Ljava/lang/String;)(hrestTag);
 	                    } else {
 	                    	var webPage = @uk.ac.kmi.microwsmo.client.controller.ControllerToolkit::getWebPage()();
@@ -303,6 +325,8 @@ public final class HRESTController {
 			return @uk.ac.kmi.microwsmo.client.controller.HRESTController::checkInput(Ljava/lang/Object;)(element);
 		} else if (hrestType == "output") {
 			return @uk.ac.kmi.microwsmo.client.controller.HRESTController::checkOutput(Ljava/lang/Object;)(element);
+		} else if (hrestType == "paramm") {
+			return @uk.ac.kmi.microwsmo.client.controller.HRESTController::checkParam(Ljava/lang/Object;)(element);
 		} else {
 			return false;
 		}
@@ -325,12 +349,13 @@ public final class HRESTController {
         var parent = element.parentNode;
         var className = parent.className;
         while( parent.nodeName != "BODY" && className != "service" && className != "label" && className != "method" && className != "address" 
-        		&& className != "operation" && className != "input" && className != "output" ) {
+        		&& className != "operation" && className != "input" && className != "output" && className != "paramm") {
         	parent = parent.parentNode;
         	className = parent.className;
         }
         if( parent.nodeName == "BODY" ) {
-        	return "hrest";
+     		//Root node of the Semantic Annotation tree
+        	return "SemanticAnnotation";
         } else {
 	        return parent.id;
         }
@@ -451,25 +476,94 @@ public final class HRESTController {
         return result;
 	}-*/;
 	
-	private static void updateServiceStructureTree(String parentID, String childID) {
+	private static native void checkParam(Object element) /*-{
+		var result = false;
+	    var parent = element.parentNode;
+	    
+	    while (parent.nodeName != "BODY") {
+	        var className = parent.className;
+	        
+	        if (className == "label" || className == "method" || className == "address") {
+	            return false;
+	        }
+	        if (className == "input" || className == "output") {
+	            result = true;
+	        }
+	        parent = parent.parentNode;
+	    }
+	    
+	    return result;
+	}-*/;
+	
+	public static native String addSemanticEntityToTree()  /*-{
+	
+	//console.log("addSemanticEntityToTree");
+	
+		var range = @uk.ac.kmi.microwsmo.client.controller.HRESTController::getSelectionRange()();
+		
+		//console.log(range);
+		
+		while(range.startContainer.nodeType!=1){
+			 parentElementStart=range.startContainer.parentNode;
+			 range.setStart(parentElementStart, 0);
+			 
+			// console.log("parentElementStart extended selection");
+			// console.log(parentElementStart);
+		}
+					    	
+		while(range.endContainer.nodeType!=1){
+			 parentElementEnd=range.endContainer.parentNode;  
+			 range.setEnd(parentElementEnd, parentElementEnd.length);
+			 
+			// console.log("parentElementEnd extended selection");
+			 //console.log(parentElementEnd);
+		}
+		
+		var parent = range.parentElement ? range.parentElement() : range.commonAncestorContainer;
+				
+		//console.log(parent);			
+							 
+		if(parent) {
+		    while (parent.nodeName != "BODY") {
+	            var className = parent.className;
+	            if (className == "input" || className == "output") {
+	                
+	                //console.log(parent.id);
+	                return parent.id;
+	            }
+	            parent = parent.parentNode;
+	        }
+	        //The annotation is not in an input or output element. Error
+	        //	@uk.ac.kmi.microwsmo.client.util.Message::show(Ljava/lang/String;)
+			//	(@uk.ac.kmi.microwsmo.client.util.Message::ADDMREF);
+	    }
+		
+	}-*/;
+	
+	private static void updateServiceStructureTree(String parentID, String childID, String nodeType) {
 		ServiceStructureTree tree = MicroWSMOeditor.getServiceStructureTree();
 		BaseTreeItem parent = tree.getItemById(parentID);
 		
-		if (childID.equals(AnnotationClass.SERVICE)){
-			tree.addItem(parent, new BaseTreeItem(childID, CSSIconImage.SERVICE));
+		if (childID.equals(AnnotationClass.SERVICE) || childID.contains(AnnotationClass.SERVICE)){
+			tree.addItem(parent, new BaseTreeItem(childID, CSSIconImage.SERVICE, AnnotationClass.SERVICE));
+			tree.expandAll();
+		} else if(childID.equals(AnnotationClass.PARAM) || childID.contains(AnnotationClass.PARAM)){
+			tree.addItem(parent, new BaseTreeItem(childID, CSSIconImage.TERM, nodeType));
+			tree.expandAll();
 		} else{
-			tree.addItem(parent, new BaseTreeItem(childID, CSSIconImage.FOLDER_CLOSED));
+			tree.addItem(parent, new BaseTreeItem(childID, CSSIconImage.FOLDER, nodeType));
+			tree.expandAll();
 		}
 	}
 	
-	public static void updateHrestTagsTree(String hrestTag) {
-		if( hrestTag.startsWith("service") ) {
+	public static void updateHrestTagsTree(String nodeType) {
+		if( nodeType.toLowerCase().trim().equals(AnnotationClass.SERVICE.toLowerCase().trim()) ) {
 			if( ComponentID.IDGenerator.isTheFirstServiceTag() ) {
 				HRESTController.setFirstHrestLevel(true);
 			} else if( ComponentID.IDGenerator.wasTheLastServiceTag() ) {
 				HRESTController.setFirstHrestLevel(false);
 			}
-		} else if( hrestTag.startsWith("operation") ) {
+		} else if( nodeType.toLowerCase().trim().equals(AnnotationClass.OPERATION.toLowerCase().trim())) {
 			if( ComponentID.IDGenerator.isTheFirstOperationTag() ) {
 				HRESTController.setSecondHrestLevel(true);
 			} else if( ComponentID.IDGenerator.wasTheLastOperationTag() ) {
@@ -483,9 +577,51 @@ public final class HRESTController {
 	 * @param hrestID
 	 */
 	public static void deleteAnnotation(String hrestID) {
-		ControllerToolkit.deleteElementByID(hrestID);
-		ComponentID.IDGenerator.deleteID(hrestID);
-		updateHrestTagsTree(hrestID);
+		
+		ServiceStructureTree tree = MicroWSMOeditor.getServiceStructureTree();
+		BaseTreeItem currentNode = tree.getItemById(hrestID);
+		
+		//For debuggin purposes only
+		//AddModelReferenceDialog addModelReferenceDialog = new AddModelReferenceDialog("id: " + hrestID + "; nodetype: " + currentNode.getNodeType());
+		//addModelReferenceDialog.setModal(true);
+		//addModelReferenceDialog.show();
+		
+		if(currentNode.getNodeType().equals(AnnotationClass.MODELREFERENCE)){
+			BaseTreeItem parent = tree.getParentOf(currentNode);
+			
+			//If the parent is an ENTITY, it should be deleted aswell
+			//if(parent.getNodeType().equals(AnnotationClass.ENTITY)){
+				/*String parentID = parent.getID();
+				ControllerToolkit.deleteModelReference(parentID);
+				ControllerToolkit.deleteElementByID(parentID);
+				
+				tree.removeItemById(parentID);*/
+				
+				//Message.show(Message.DELETEMREF);
+				
+			//} else {
+				
+				ControllerToolkit.deleteModelReference(parent.getID());
+				parent.setModelReference("");
+			//}
+			
+		} else if (currentNode.getNodeType().equals(AnnotationClass.SCHEMAMAPPING)){
+			BaseTreeItem parent = tree.getParentOf(currentNode);
+			
+			ControllerToolkit.deleteModelReference(parent.getID());
+			
+			if(parent.getNodeType().equals(AnnotationClass.INPUT)){
+				parent.setLoweringSchemaMapping("");
+			} else {
+				parent.setLiftingSchemaMapping("");
+			}
+			
+		} else {
+			String nodeType = currentNode.getNodeType();
+			ControllerToolkit.deleteElementByID(hrestID);
+			ComponentID.IDGenerator.deleteID(nodeType);
+			updateHrestTagsTree(nodeType);
+		}
 	}
 	
 	/**

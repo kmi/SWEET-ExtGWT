@@ -19,6 +19,9 @@ public abstract class CSSIconImage {
 	public static final String COLLAPS = "collaps";
 	public static final String LOADING = "loading";
 	public static final String SERVICE = "gears";
+	public static final String ROOT = "member";
+	public static final String FOLDER = "folder";
+	public static final String MREF = "mref";
 	
 	/**
 	 * 

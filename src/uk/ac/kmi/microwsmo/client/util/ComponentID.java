@@ -5,11 +5,15 @@ import com.extjs.gxt.ui.client.widget.menu.MenuItem;
 
 public abstract class ComponentID {
 	
-	public static String ENTITY = "entity";
+	//was entity
+	public static String ENTITY = "paramm";
 
 	public static String ANNOTATIONS_CONTEXT_MENU = "annotationsContextMenu";
 	public static String ANNOTATIONS_PANEL = "annotationsPanel";
+	public static String OWNONTOLOGY_PANEL = "ownOntologyPlanel";
 	public static String ANNOTATIONS_TREE = "annotationsTree";
+	public static String OWNONTOLOGY_TREE = "ownOntologyTree";
+	public static String OWNONTOLOGY_TREE_CONTEXT_MENU = "ownOntologyContextMenu";
 	public static String BUTTON_PANEL = "buttonPanel";
 	public static String CENTER_SIDE_PANEL = "centerSidePanel";
 	public static String EDITOR_MENU_BAR = "editorMenuBar";
@@ -34,6 +38,7 @@ public abstract class ComponentID {
 	public static String DOMAIN_ONTOLOGIES_PANEL = "domainOntologiesPanel";
 	public static String DOMAIN_ONTOLOGIES_TREE = "domainOntologiesTree";
 	public static String QUERY_WATSON_BUTTON = "queryWatsonButton";
+	public static String LOAD_ONTOLOGY_BUTTON = "loadOntologyButton";
 	public static String RIGHT_SIDE_PANEL = "rightSidePanel";
 	public static String SAVE_BUTTON = "saveButton";
 	public static String SAVE_LOCAL_MENU = "saveLocalMenu";
@@ -59,6 +64,8 @@ public abstract class ComponentID {
 		public static final String OPERATION = "operation";
 		public static final String INPUT = "input";
 		public static final String OUTPUT = "output";
+		public static final String PARAM = "paramm";
+		
 
 		/* The html element to use with the hREST tag */
 		
@@ -86,6 +93,8 @@ public abstract class ComponentID {
 				return DIV;
 			} else if( itemID.equalsIgnoreCase(OUTPUT) ) {
 				return DIV;
+			} else if( itemID.equalsIgnoreCase(PARAM) ) {
+				return SPAN;
 			} else {
 				return "";
 			}
@@ -103,7 +112,12 @@ public abstract class ComponentID {
 		public static final String OPERATION = "operation";
 		public static final String INPUT = "input";
 		public static final String OUTPUT = "output";
-		public static final String ENTITY = "entity";
+		//was entity
+		public static final String ENTITY = "paramm";
+		public static final String PARAM = "paramm";
+		public static final String TREEROOT = "SemanticAnnotation";
+		public static final String MODELREFERENCE = "areference";
+		public static final String SCHEMAMAPPING = "aschemamapping";
 	}
 	
 	public static class IDGenerator {
@@ -115,7 +129,8 @@ public abstract class ComponentID {
 			private static long operationCount;
 			private static long inputCount;
 			private static long outputCount;
-			private static long entityCount;
+			//private static long entityCount;
+			private static long paramCount;
 			private static long unknownCount;
 			
 			public static void init() {
@@ -126,7 +141,8 @@ public abstract class ComponentID {
 				operationCount = 0;
 				inputCount = 0;
 				outputCount = 0;
-				entityCount = 0;
+				//entityCount = 0;
+				paramCount = 0;
 				unknownCount = 0;
 			}
 			
@@ -159,8 +175,13 @@ public abstract class ComponentID {
 					outputCount++;
 					return "output" + outputCount;
 				} else if( item.equals(ComponentID.ENTITY) ) {
-					entityCount++;
-					return "entity" + entityCount;
+					//was entityCount
+					paramCount++;
+					//was entity
+					return "paramm" + paramCount;
+				} else if( item.equals(HREST.PARAM) ) {
+					paramCount++;
+					return "paramm" + paramCount;
 				} else {
 					unknownCount++;
 					return "unknown" + unknownCount;
@@ -171,23 +192,26 @@ public abstract class ComponentID {
 			 * 
 			 * @param item
 			 */
-			public static void deleteID(String item) {
-				if( item.startsWith(HREST.SERVICE) ) {
+			public static void deleteID(String nodeType) {
+				if( nodeType.equals(AnnotationClass.SERVICE) ) {
 					serviceCount--;
-				} else if( item.equals(HREST.LABEL) ) {
+				} else if( nodeType.equals(AnnotationClass.LABEL) ) {
 					labelCount--;
-				} else if( item.startsWith(HREST.METHOD) ) {
+				} else if( nodeType.equals(AnnotationClass.METHOD) ) {
 					methodCount--;
-				} else if( item.startsWith(HREST.ADDRESS) ) {
+				} else if( nodeType.equals(AnnotationClass.ADDRESS) ) {
 					addressCount--;
-				} else if( item.startsWith(HREST.OPERATION) ) {
+				} else if( nodeType.equals(AnnotationClass.OPERATION) ) {
 					operationCount--;
-				} else if( item.startsWith(HREST.INPUT) ) {
+				} else if( nodeType.equals(AnnotationClass.INPUT) ) {
 					inputCount--;
-				} else if( item.startsWith(HREST.OUTPUT) ) {
+				} else if( nodeType.equals(AnnotationClass.OUTPUT) ) {
 					outputCount--;
-				} else if( item.startsWith(ComponentID.ENTITY) ) {
-					entityCount--;
+				} else if( nodeType.equals(AnnotationClass.ENTITY) ) {
+					//was entityCount
+					paramCount--;
+				} else if( nodeType.equals(AnnotationClass.PARAM) ) {
+					paramCount--;
 				} else {
 					unknownCount--;
 				}		

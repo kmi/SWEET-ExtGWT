@@ -1,20 +1,51 @@
 package uk.ac.kmi.microwsmo.client.controller;
 
+import com.extjs.gxt.ui.client.widget.Dialog;
+import com.extjs.gxt.ui.client.widget.HorizontalPanel;
+import com.extjs.gxt.ui.client.widget.button.Button;
+import com.extjs.gxt.ui.client.widget.form.FormPanel;
+import com.extjs.gxt.ui.client.widget.form.TextArea;
+import com.extjs.gxt.ui.client.widget.form.TextField;
+import com.extjs.gxt.ui.client.widget.layout.FillLayout;
+import com.extjs.gxt.ui.client.widget.layout.TableData;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.PopupPanel;
+import com.extjs.gxt.ui.client.widget.tree.Tree;
+import com.extjs.gxt.ui.client.widget.tree.TreeItem;
+import com.extjs.gxt.ui.client.widget.MessageBox;
+import com.extjs.gxt.ui.client.Style.VerticalAlignment;
+
 import java.util.List;
 
 import uk.ac.kmi.microwsmo.client.MicroWSMOeditor;
 import uk.ac.kmi.microwsmo.client.util.CSSIconImage;
 import uk.ac.kmi.microwsmo.client.util.Message;
+import uk.ac.kmi.microwsmo.client.util.TreeVisualizer;
+import uk.ac.kmi.microwsmo.client.view.AboutDialog;
 import uk.ac.kmi.microwsmo.client.view.AnnotationsTree;
 import uk.ac.kmi.microwsmo.client.view.BaseTreeItem;
 import uk.ac.kmi.microwsmo.client.view.DomainOntologiesTree;
+import uk.ac.kmi.microwsmo.client.view.OwnOntologyTree;
 import uk.ac.kmi.microwsmo.client.view.ServicePropertiesTree;
+import uk.ac.kmi.microwsmo.client.view.model.*;
+import uk.ac.kmi.microwsmo.client.view.LoadOntologyDialog;
+
+import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import com.extjs.gxt.ui.client.data.ModelData;
+import com.extjs.gxt.ui.client.event.ButtonEvent;
+import com.extjs.gxt.ui.client.event.SelectionListener;
 import com.google.gwt.user.client.Window;
 
-final class SemanticController {
+import com.extjs.gxt.ui.client.store.TreeStore;
+import com.extjs.gxt.ui.client.util.TreeBuilder;
+import uk.ac.kmi.microwsmo.client.MicroWSMODataServiceAsync;
 
+public final class SemanticController {
+
+	
 	/**
 	 * Query the semantic crawler which retrieve the semantic documents.
 	 */
@@ -72,6 +103,31 @@ final class SemanticController {
 	private static boolean isValid(String keyword) {
 		return keyword != null && !keyword.equals("") && !keyword.equals("\\s");
 	}
+	
+	private static native OntologyNode buildModelFromOntology(String restURL) /*-{
+	// handle the http comunication object
+		var httpRequest = @uk.ac.kmi.microwsmo.client.controller.ControllerToolkit::getXMLHttpRequest()();
+		if( httpRequest != null ) {
+			var parameters = "url=" + restURL;
+			httpRequest.open("POST", "../loadonto", true);
+			// set the header
+			httpRequest.setRequestHeader("content-type", "application/x-www-form-urlencoded");
+			httpRequest.setRequestHeader("content-length", parameters.length);
+			httpRequest.setRequestHeader("connection", "close");
+			httpRequest.send(parameters);
+			// callback function
+			httpRequest.onreadystatechange = function() {
+				if( httpRequest.readyState == 4 && httpRequest.status == 200) {
+					var result = httpRequest.responseText;
+					
+					console.log(result);
+				}
+			}
+		} else {
+			@uk.ac.kmi.microwsmo.client.util.Message::show(Ljava/lang/String;)
+	    	(@uk.ac.kmi.microwsmo.client.util.Message::AJAX);
+		}
+	}-*/;
 	
 	private static native void generateServiceProperties(String keyword, boolean viewMore) /*-{
 		// handle the http comunication object
@@ -367,7 +423,7 @@ final class SemanticController {
 		tree.addItem(root, child);
 	}
 	
-	public static native void annotate(String url, String icon, String sel) /*-{
+	public static native void annotate(String url, String icon, String sel, String id) /*-{
 		try {
 			// retrieves the selection inside the iframe
 			var selection = @uk.ac.kmi.microwsmo.client.controller.ControllerToolkit::getSelection()(); 
@@ -378,13 +434,13 @@ final class SemanticController {
 						// create the element
 						element = $doc.createElement("span");
 						// generate a unique ID and set it to the element
-						id = @uk.ac.kmi.microwsmo.client.util.ComponentID.IDGenerator::getID(Ljava/lang/String;)("entity");
 						attribute = $doc.createAttribute("id");
 						attribute.value = id;
 						element.setAttributeNode(attribute);
 						// create the attribute "class"
 						attribute = $doc.createAttribute("class");
-						attribute.value = "entity";
+						//was entity
+						attribute.value = "paramm";
 						element.setAttributeNode(attribute);
 						// create the attribute "rel"
 						attribute = $doc.createAttribute("rel");
@@ -421,4 +477,98 @@ final class SemanticController {
 		    (@uk.ac.kmi.microwsmo.client.util.Message::ANNOTATION_SELECTION);
 		}
 	}-*/;
+	
+	 
+	//private WSMOLiteModuleView managedModuleView;
+    //public WSMOLiteModuleView getManagedModuleView() {
+	//        return managedModuleView;
+	// }
+	 
+	 static LoadOntologyDialog openDialog;
+	 public static void showOntoURLDialog(String loadUrl) {
+		    openDialog = new LoadOntologyDialog();  
+	        openDialog.show();
+	 }
+	 
+	public static void loadOntology(final String url) {
+
+        if (url == null || url.length() == 0) {
+        	openDialog.clearProgressDialog();
+            return;
+        }
+        
+        //Check that the ontology has not been laded already
+        //if (getManagedModuleView().findOntologyNode(url) != null) {
+        /*if (findOntologyNode(url) != null) {
+            MessageBox.alert("Warning", "Ontology is already loaded!", null);
+            clearProgressDialog();
+            return;
+        }*/
+        
+        //Load the ontology
+      try {
+           // (MicroWSMOeditor.getDataServiceProxy().buildModelFromOntology(url, new AsyncCallback<OntologyNode>() {
+    	  	
+    	  MicroWSMOeditor.getDataServiceProxy().buildModelFromOntology(url, new AsyncCallback<OntologyNode>() {
+                public void onFailure(Throwable caught) {
+                    MessageBox.alert("Error1", caught.getMessage(), null);
+                    openDialog.clearProgressDialog();
+                }
+                public void onSuccess(OntologyNode result) {
+                    if (result == null) {
+                        MessageBox.alert("Error2", "Ontology not loaded!", null);
+                        openDialog.clearProgressDialog();
+                        return;
+                    }
+                    result.setSourceURL(url);
+                    showOntology(result);
+                    openDialog.clearProgressDialog();
+                }
+            });
+        }
+        catch(Exception err) {
+        	openDialog.clearProgressDialog();
+        	
+        	MessageBox m = MessageBox.info("Error3", err.getMessage(), null);
+        }
+       
+    }
+	
+	 private static PopupPanel progressPanel;
+	 //private static Tree ontoTree;
+	
+	 public static void showOntology(OntologyNode ontoNode) {
+	        OntologyNode top = new OntologyNode("", "");
+	        top.add(ontoNode);
+
+	        OwnOntologyTree ontoTree = MicroWSMOeditor.getOwnOntologyTree();
+	       
+	        TreeBuilder.buildTree(MicroWSMOeditor.getOwnOntologyTree(), top);
+	        for(TreeItem ti : ontoTree.getRootItem().getItems()) {
+	        	//if(ti.getModel() instanceof ConceptNode){
+	        		//ti.setIconStyle(CSSIconImage.ONTO_CLASS);
+	        	//}
+	        	
+	            if (ontoNode.equals(ti.getModel())) {
+	            	TreeVisualizer.setServiceModelIcons(ti);
+	               // GUIHelper.setOntologyTooltips(ti);
+	                ontoTree.getSelectionModel().select(ti, false);
+	                //ontoTreeHolder.scrollIntoView(ti);
+	                ti.setExpanded(true);
+	                break;
+	            }
+	        }
+	    }
+	
+	/* public OntologyNode findOntologyNode(String url) {
+		 OwnOntologyTree ontoTree = MicroWSMOeditor.getOwnOntologyTree();
+	        for(TreeItem ti : ontoTree.getRootItem().getItems()) {
+	            if (ti.getModel() != null 
+	                    && ti.getModel() instanceof OntologyNode
+	                    && url.equals(((OntologyNode)ti.getModel()).getSource())) {
+	                return (OntologyNode)ti.getModel();
+	            }
+	        }
+	        return null;
+	  }*/
 }

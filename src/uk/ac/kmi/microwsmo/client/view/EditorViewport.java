@@ -8,6 +8,10 @@ import com.extjs.gxt.ui.client.widget.LayoutContainer;
 import com.extjs.gxt.ui.client.widget.Viewport;
 import com.extjs.gxt.ui.client.widget.layout.BorderLayout;
 import com.extjs.gxt.ui.client.widget.layout.BorderLayoutData;
+import com.extjs.gxt.ui.client.event.ButtonEvent;
+import com.extjs.gxt.ui.client.event.SelectionListener;
+import com.extjs.gxt.ui.client.widget.button.Button;
+import com.extjs.gxt.ui.client.widget.layout.FlowLayout;
 
 /**
  * This is the main container. In this panel are layouted
@@ -30,6 +34,8 @@ public final class EditorViewport extends Viewport {
 	private BorderLayoutData westConstraint;
 	private BorderLayoutData centerConstraint;
 	private BorderLayoutData eastConstraint;
+	
+	private Button aboutButton;
 	
 	/* ***** the components ***** */
 
@@ -92,6 +98,7 @@ public final class EditorViewport extends Viewport {
 		westConstraint = new BorderLayoutData(LayoutRegion.WEST, 0.2F, 180, 600);
 		westConstraint.setCollapsible(true);
 		westConstraint.setSplit(true);
+		westConstraint.setMinSize(0);
 		// 20% of the area and a floating size from 180px to 400px
 		eastConstraint = new BorderLayoutData(LayoutRegion.EAST, 0.2F, 180, 600);
 		eastConstraint.setCollapsible(true);
@@ -117,7 +124,20 @@ public final class EditorViewport extends Viewport {
 	private void addComponents() {
 		// The menu bar for now is disabled.
 		LayoutContainer northContainer = new LayoutContainer();
+		
+		aboutButton = new Button("About");
+		aboutButton.setStyleAttribute("float", "right");
+		aboutButton.addSelectionListener(new SelectionListener<ButtonEvent>() {
+			public void componentSelected(ButtonEvent ce) {
+				AboutDialog aboutDialog = new AboutDialog();
+				aboutDialog.show();
+			}
+		});
+		northContainer.add(aboutButton);
+		
 		northContainer.addText("<span style=\"font-size: 11px; font-family: tahoma,arial,verdana,sans-serif; color: #15428B;\">For best user experience, plese use the latest verion of Firefox.</span>");
+		northContainer.setLayout(new FlowLayout());
+		
 		add(northContainer, northConstraint);
 		add(leftPanel, westConstraint);
 		add(centerPanel, centerConstraint);

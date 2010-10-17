@@ -27,6 +27,14 @@
 	<servlet>
 		<description>
 		</description>
+		<display-name>loadonto</display-name>
+		<servlet-name>loadonto</servlet-name>
+		<servlet-class>
+		uk.ac.kmi.microwsmo.server.servlet.OntologyLoader</servlet-class>
+	</servlet>
+	<servlet>
+		<description>
+		</description>
 		<display-name>showFile</display-name>
 		<servlet-name>showFile</servlet-name>
 		<servlet-class>
@@ -72,6 +80,15 @@
 		<servlet-class>
 		uk.ac.kmi.microwsmo.server.servlet.Logger</servlet-class>
 	</servlet>
+	<servlet>
+		<description>
+		</description>
+		<display-name>MicroWSMODataService</display-name>
+		<servlet-name>MicroWSMODataService</servlet-name>
+		<servlet-class>
+		uk.ac.kmi.microwsmo.server.servlet.MicroWSMODataServiceImpl</servlet-class>
+	</servlet>
+	
 	<servlet-mapping>
 		<servlet-name>proxy</servlet-name>
 		<url-pattern>/proxy</url-pattern>
@@ -83,6 +100,10 @@
 	<servlet-mapping>
 		<servlet-name>save</servlet-name>
 		<url-pattern>/save</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>loadonto</servlet-name>
+		<url-pattern>/loadonto</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>showFile</servlet-name>
@@ -108,6 +129,10 @@
 		<servlet-name>logger</servlet-name>
 		<url-pattern>/logger</url-pattern>
 	</servlet-mapping>
+	<servlet-mapping>
+	    <servlet-name>MicroWSMODataService</servlet-name>
+	    <url-pattern>/microwsmoeditor/MicroWSMODataService.do</url-pattern>
+	 </servlet-mapping>
 	
 	<welcome-file-list>
 		<welcome-file>MicroWSMOeditor.html</welcome-file>

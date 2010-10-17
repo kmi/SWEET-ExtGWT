@@ -4,6 +4,7 @@
   <!-- Inherit the core Web Toolkit stuff.                        -->
   <inherits name='com.google.gwt.user.User'/>
   <inherits name='com.extjs.gxt.ui.GXT'/>
+  <inherits name='com.google.gwt.http.HTTP' />
 
   <!-- Inherit the default GWT style sheet.  You can change       -->
   <!-- the theme of your GWT application by uncommenting          -->
@@ -16,5 +17,8 @@
   <!-- Other module inherits                                      -->
 
   <!-- Specify the app entry point class.                         -->
+  
+  <servlet path='/microwsmoeditor/MicroWSMODataService.do' class='uk.ac.kmi.microwsmo.server.servlet.MicroWSMODataServiceImpl' />
+   
   <entry-point class='uk.ac.kmi.microwsmo.client.MicroWSMOeditor'/>
 </module>

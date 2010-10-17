@@ -45,5 +45,14 @@
 }
 
 .gears {
-	background-image: url("../icons/gears.gif") !important;;
+	background-image: url("../icons/service1.png") !important;;
+}
+.member {
+	background-image: url("../icons/root1.png") !important;;
+}
+.folder {
+	background-image: url("../icons/folder.gif") !important;;
+}
+.mref {
+	background-image: url("../icons/mm.gif") !important;;
 }

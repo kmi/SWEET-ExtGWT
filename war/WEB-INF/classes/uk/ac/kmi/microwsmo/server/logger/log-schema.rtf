@@ -1,0 +1,144 @@
+{\rtf1\ansi\ansicpg936\cocoartf1038\cocoasubrtf250
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww19600\viewh13620\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
+
+\f0\fs24 \cf0 @prefix dc:   <http://purl.org/dc/elements/1.1/>.\
+@prefix time: <http://www.w3.org/2006/time>.\
+@prefix foaf: <http://xmlns.com/foaf/0.1/>.\
+@prefix owl:  <http://www.w3.org/2002/07/owl#>.\
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.\
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.\
+@prefix rev:  <http://www.purl.org/stuff/rev#>.\
+@prefix s:    <http://www.soa4all.eu/log#>.\
+@prefix vs:   <http://www.w3.org/2003/06/sw-vocab-status/ns#>.\
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#>.\
+\
+s:LogEntry\
+	rdfs:comment "LogEntry is the single line of a usual log file";\
+	a rdfs:Class;\
+	s:hasDateTime time:Instant;\
+	s:fromIP rdfs:Literal;\
+	s:hasPersistentSessionID rdfs:Literal;\
+	s:hasAction s:Action.\
+\
+s:Action\
+	rdfs:comment "Action is a generic class that is subclassed in the various types of actions";\
+	a rdfs:Class.\
+\
+#######################################################\
+#Here the list of some of the Actions (to be completed)\
+\
+s:LoginAction # This action is very important because it lets the RS to correlate different sessions of the same users\
+	rdfs:subClassOf s:Action;\
+	s:loggedInUser foaf:Person.\
+\
+s:LogoutAction\
+	rdfs:subClassOf s:Action.\
+\
+s:Item\
+	rdfs:comment "Item is the generic item managed by SOA4All Studio (a Service)";\
+	a rdfs:Class.\
+\
+s:Service\
+	rdfs:subClassOf s:Item.\
+\
+s:Goal	# available in the future version\
+	rdfs:subClassOf s:Item.\
+\
+s:ItemSelection\
+	rdfs:subClassOf s:Action;\
+	s:selectedItem s:Item.\
+\
+s:ItemBookmarking\
+	rdfs:subClassOf s:Action;\
+	s:bookmarkedItem s:Item.\
+\
+s:ItemTagging\
+	rdfs:subClassOf s:Action;\
+	s:taggedItem s:Item;\
+	s:tag rdfs:Literal.\
+\
+s:ItemEditing\
+	rdfs:subClassOf s:Action;\
+	s:editedItem s:Item.\
+\
+s:ItemCategorization\
+	rdfs:subClassOf s:Action;\
+	s:categorizedItem s:Item:\
+	s:category rdfs:Literal.\
+\
+s:ItemInvocation\
+	rdfs:subClassOf s:Action;\
+	s:invokedItem s:Item.\
+\
+#############################################################################################\
+# Binding with the Revyu schema (from http://danja.talis.com/xmlns/rev_2007-11-09/index.html)\
+s:ItemReview\
+	rdfs:subClassOf s:Action;\
+	s:hasReview rev:Review.\
+\
+# The hasReview property can be applied to s:Item\
+rev:hasReview\
+	rdfs:domain s:Item.\
+\
+##########################################################################################\
+# Import of the Revyu schema (from http://danja.talis.com/xmlns/rev_2007-11-09/index.html)\
+\
+rev:Review a rdfs:Class;\
+	rdfs:comment "A review of an artistic work";\
+	rdfs:isDefinedBy <http://www.purl.org/stuff/rev>;\
+	rdfs:label "Review";\
+	vs:moreinfo "core term";\
+	vs:term_status "stable".\
+\
+rev:hasReview a rdf:Property;\
+	rdfs:comment "Used to associate a work of art with a a review";\
+	rdfs:domain rdfs:Resource;\
+	rdfs:isDefinedBy <http://www.purl.org/stuff/rev>;\
+	rdfs:label "hasReview";\
+	rdfs:range rev:Review;\
+	vs:moreinfo "core term";\
+	vs:term_status "stable".\
+\
+rev:rating a rdf:Property;\
+	rdfs:comment "A numeric value";\
+	rdfs:isDefinedBy <http://www.purl.org/stuff/rev>;\
+	rdfs:label "rating";\
+	vs:moreinfo "core term";\
+	vs:term_status "stable".\
+\
+rev:reviewer a rdf:Property;\
+	rdfs:comment "The person that has written the review";\
+	rdfs:domain <http://www.purl.org/stuff/rev#Review>;\
+	rdfs:isDefinedBy <http://www.purl.org/stuff/rev>;\
+	rdfs:label "reviewer";\
+	rdfs:range foaf:Person;\
+	vs:moreinfo "core term";\
+	vs:term_status "stable".\
+\
+rev:text a rdf:Property;\
+	rdfs:comment "The text of the review";\
+	rdfs:isDefinedBy <http://www.purl.org/stuff/rev>;\
+	rdfs:label "text";\
+	vs:moreinfo "core term";\
+	vs:term_status "stable".\
+\
+rev:type a rdf:Property;\
+	rdfs:comment "The type of media of a work under review";\
+	rdfs:isDefinedBy <http://www.purl.org/stuff/rev>;\
+	rdfs:label "type";\
+	vs:moreinfo "core term";\
+	vs:term_status "stable".\
+\
+#########################################################################\
+# Import of the Time Ontology schema (from http://www.w3.org/TR/owl-time)\
+\
+time:Instant\
+	a rdfs:Class.\
+\
+time:inXSDDateTime\
+	rdfs:domain time:Instant;\
+	rdfs:range xsd:dateTime.\
+}

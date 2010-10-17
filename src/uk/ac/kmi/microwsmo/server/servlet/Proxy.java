@@ -1,8 +1,12 @@
 package uk.ac.kmi.microwsmo.server.servlet;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Reader;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLDecoder;
@@ -12,12 +16,41 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.sax.SAXSource;
 
+import org.apache.commons.httpclient.HttpMethodBase;
+import org.apache.commons.httpclient.HttpsURL;
+import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.http.HttpRequest;
+import org.restlet.Client;
+import org.restlet.data.ChallengeResponse;
+import org.restlet.data.ChallengeScheme;
+import org.restlet.data.MediaType;
+import org.restlet.data.Method;
+import org.restlet.data.Protocol;
+import org.restlet.data.Request;
+import org.restlet.data.Response;
+import org.restlet.resource.DomRepresentation;
+import org.restlet.resource.StringRepresentation;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.tidy.Tidy;
+
+import com.google.appengine.api.urlfetch.HTTPRequest;
+import com.google.appengine.api.urlfetch.HTTPResponse;
+import com.google.appengine.api.urlfetch.HTTPHeader;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.ResponseTextHandler;
+import com.google.gwt.user.client.impl.HTTPRequestImpl;
+import com.google.appengine.api.urlfetch.URLFetchService;
+import com.google.appengine.api.urlfetch.URLFetchServiceFactory;
+
+import org.apache.commons.httpclient.HttpClient;
+
+
 import java.util.UUID;
 
 /**
@@ -83,15 +116,44 @@ public class Proxy extends HttpServlet {
 	private Document getDOM() throws IOException {
 		// open the connection toward the server which own the web page
 		connection = url.openConnection();
-		InputStream inputStream = connection.getInputStream();
-		/*
-		 * Retrieve the DOM from the page by the Tidy parser.
-		 * For further information: <http://tidy.sourceforge.net>,
-		 * <http://www.w3.org/People/Raggett/tidy>
-		 */
-		parser = new Tidy();
-		Document document = parser.parseDOM(inputStream, null);
-		return document;
+		
+		int lenght = connection.getContentLength();
+		
+		if(lenght == -1){
+			
+			HttpClient client = new HttpClient();
+			HttpMethodBase httpMethod = null;
+			httpMethod = new GetMethod(url.toString());
+			client.executeMethod(httpMethod);
+			
+			String responseString = httpMethod.getResponseBodyAsString();
+			InputStream responseStream = new ByteArrayInputStream(responseString.getBytes("UTF-8")); 
+			
+			//
+			/*
+			 * Retrieve the DOM from the page by the Tidy parser.
+			 * For further information: <http://tidy.sourceforge.net>,
+			 * <http://www.w3.org/People/Raggett/tidy>
+			 */
+			parser = new Tidy();
+			Document document = parser.parseDOM(responseStream, null);
+			return document;
+			
+		} else {
+			connection.connect();
+			
+			InputStream inputStream = connection.getInputStream();
+			
+			//
+			/*
+			 * Retrieve the DOM from the page by the Tidy parser.
+			 * For further information: <http://tidy.sourceforge.net>,
+			 * <http://www.w3.org/People/Raggett/tidy>
+			 */
+			parser = new Tidy();
+			Document document = parser.parseDOM(inputStream, null);
+			return document;
+		}
 	}
 	
 	/**

@@ -18,6 +18,11 @@ public final class Message {
 	public final static String STORE_FAIL = "store_fail";
 	public final static String ERROR = "error";
 	public final static String DIV_ELEMENT = "div_element";
+	public final static String EXISTINGID = "existing_id";
+	public final static String DELETEMREF = "deletemref";
+	public final static String ADDMREF = "addmref";
+	public final static String ADDMREF1 = "addmref1";
+	public final static String ADDLFSCHEMA = "addliftingloweringschema";
 	
 	public static void show(String command) {
 		show(command, "");
@@ -27,7 +32,7 @@ public final class Message {
 		if( command.equals(AJAX) ) {
 			MessageBox.alert(title + "AJAX error", "The browser doesn't support the AJAX object!", null).setIcon(MessageBox.ERROR);
 		} else if( command.equals(SEMANTIC_ANNOTATION) ) {
-			MessageBox.alert(title + "Semantic Annotation warning", "The highlighted keyword doesn't correspond to the chosen entity!", null);
+			MessageBox.alert(title + "Semantic Annotation warning", "The highlighted keyword doe not correspond to the chosen entity! Do you want to do the annotation anyway?", null);
 		} else if( command.equals(EMPTY_URI) ) {
 			MessageBox.alert(title + "Empty URI warning", "The empty string is not a valid URI!", null);
 		} else if( command.equals(INVALID_URI) ) {
@@ -46,7 +51,20 @@ public final class Message {
 			MessageBox.alert(title + "Repository warning", "Fail to save to the repository", null);
 		} else if( command.equals(DIV_ELEMENT) ) {
 			MessageBox.alert(title + "Annotation warning", "Your selection will breakup the HTML code.", null);
+		} else if( command.equals(EXISTINGID) ) {
+			MessageBox.alert(title + "Existing Id warning", "Please choose a different name! This element id already exists.", null);
+		} else if( command.equals(DELETEMREF) ) {
+			MessageBox.alert(title + "Delete", "Please delete the entity node in order to remove the model reference.", null);
+		} else if( command.equals(ADDMREF) ) {
+			MessageBox.alert(title + "Model reference", "You can add model reference only to input and output elements.", null);
+		} else if( command.equals(ADDMREF1) ) {
+			MessageBox.alert(title + "Model reference", "You can add model reference only to service and operation elements.", null);
+		} else if( command.equals(ADDLFSCHEMA) ) {
+			MessageBox.alert(title + "Schema mapping", "You can add lifting and lowering schemas only to input and output elements.", null);
 		}
+		
+		
+		
 	}
 	
 }

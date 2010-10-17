@@ -305,6 +305,7 @@ public final class ControllerToolkit {
 		    html = "<html>" + html + "</html>";
 		    // and encode it for the URI
 		    var parameter = "html=" + encodeURIComponent(html);
+		    //var parameter = "html=" + html;
 		    // call the servlet by a POST method, in asynchronous mode
 			httpRequest.open("POST", "../save", true);
 			// set the header
@@ -421,9 +422,129 @@ public final class ControllerToolkit {
 		// get the web page
 		var iframe = @uk.ac.kmi.microwsmo.client.controller.ControllerToolkit::getWebPage()();
 		// retrieve the element inside the iFrame with the ID specified in input
-		var element = iframe.contentDocument.getElementById(id)
+		var element = iframe.contentDocument.getElementById(id);
 		// call the method wich delete the element
 		@uk.ac.kmi.microwsmo.client.controller.ControllerToolkit::deleteElement(Ljava/lang/Object;)(element);
+	}-*/;
+	
+	public static native void deleteModelReference(String id) /*-{
+		// get the web page
+		var iframe = @uk.ac.kmi.microwsmo.client.controller.ControllerToolkit::getWebPage()();
+		// retrieve the element inside the iFrame with the ID specified in input
+		var element = iframe.contentDocument.getElementById(id);
+		
+		element.removeAttribute("rel");
+		element.removeAttribute("href");
+	}-*/;
+	
+	public static native void deleteSchemaMapping(String id) /*-{
+		// get the web page
+		var iframe = @uk.ac.kmi.microwsmo.client.controller.ControllerToolkit::getWebPage()();
+		// retrieve the element inside the iFrame with the ID specified in input
+		var element = iframe.contentDocument.getElementById(id);
+		
+		element.removeAttribute("rel");
+		element.removeAttribute("href");
+	}-*/;
+	
+	
+	public static native void renameProperty(String id, String newID) /*-{
+		// get the web page
+		var iframe = @uk.ac.kmi.microwsmo.client.controller.ControllerToolkit::getWebPage()();
+		// retrieve the element inside the iFrame with the ID specified in input
+		var element = iframe.contentDocument.getElementById(id);
+		
+		element.id = newID;
+	}-*/;
+	
+	public static native void addModelReference(String id, String newUri) /*-{
+		// get the web page
+		var iframe = @uk.ac.kmi.microwsmo.client.controller.ControllerToolkit::getWebPage()();
+		// retrieve the element inside the iFrame with the ID specified in input
+		var element = iframe.contentDocument.getElementById(id);
+		
+		attribute = $doc.createAttribute("rel");
+		attribute.value = "model";
+		element.setAttributeNode(attribute);
+		// create the attribute "href"
+		attribute = document.createAttribute("href");
+		attribute.value = newUri;
+		element.setAttributeNode(attribute);
+
+		//console.log("new uri: " + newUri);
+	}-*/;
+	
+	public static native void updateModelReference(String id, String newUri) /*-{
+		// get the web page
+		var iframe = @uk.ac.kmi.microwsmo.client.controller.ControllerToolkit::getWebPage()();
+		// retrieve the element inside the iFrame with the ID specified in input
+		var element = iframe.contentDocument.getElementById(id);
+		
+		element.removeAttribute("rel");
+		element.removeAttribute("href");
+		
+		attribute = $doc.createAttribute("rel");
+		attribute.value = "model";
+		element.setAttributeNode(attribute);
+		// create the attribute "href"
+		attribute = document.createAttribute("href");
+		attribute.value = newUri;
+		element.setAttributeNode(attribute);
+	
+		//console.log("new uri: " + newUri);
+	}-*/;
+	
+	public static native void addSchemaMapping(String id, String newUri, String schemaType) /*-{
+		// get the web page
+		var iframe = @uk.ac.kmi.microwsmo.client.controller.ControllerToolkit::getWebPage()();
+		// retrieve the element inside the iFrame with the ID specified in input
+		var element = iframe.contentDocument.getElementById(id);
+		
+		//schemaType "lift" or "lower"
+		if (schemaType == "lift") {
+			attribute = $doc.createAttribute("rel");
+			attribute.value = "lifting";
+			element.setAttributeNode(attribute);
+		} else {
+			attribute = $doc.createAttribute("rel");
+			attribute.value = "lowering";
+			element.setAttributeNode(attribute);
+		}
+		
+		// create the attribute "href"
+		attribute = document.createAttribute("href");
+		attribute.value = newUri;
+		element.setAttributeNode(attribute);
+	
+		//console.log("new uri: " + newUri);
+	}-*/;
+	
+	public static native void updateSchemaReference(String id, String newUri, String schemaType) /*-{
+		// get the web page
+		var iframe = @uk.ac.kmi.microwsmo.client.controller.ControllerToolkit::getWebPage()();
+		// retrieve the element inside the iFrame with the ID specified in input
+		var element = iframe.contentDocument.getElementById(id);
+		
+		element.removeAttribute("rel");
+		element.removeAttribute("href");
+		
+		//schemaType "lift" or "lower"
+		if (schemaType == "lift") {
+			attribute = $doc.createAttribute("rel");
+			attribute.value = "lifting";
+			element.setAttributeNode(attribute);
+		} else {
+			attribute = $doc.createAttribute("rel");
+			attribute.value = "lowering";
+			element.setAttributeNode(attribute);
+		}
+		
+		// create the attribute "href"
+		attribute = document.createAttribute("href");
+		attribute.value = newUri;
+		element.setAttributeNode(attribute);
+	
+		//console.log("new uri: " + newUri);
 	}-*/;
 	
 	/**

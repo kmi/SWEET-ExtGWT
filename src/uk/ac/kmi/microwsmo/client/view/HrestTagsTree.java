@@ -24,6 +24,7 @@ public final class HrestTagsTree extends DeprecatedBaseTree {
 	private HrestTagsTreeItem operation;
 	private HrestTagsTreeItem input;
 	private HrestTagsTreeItem output;
+	private HrestTagsTreeItem param;
 	
 	/**
 	 * Creates a new tree with only "k" children hardcoded, which
@@ -39,8 +40,10 @@ public final class HrestTagsTree extends DeprecatedBaseTree {
 		initOperation();
 		initInput();
 		initOutput();
+		initParam();
 		setDefaultState();
 		addListener(Events.OnDoubleClick, MicroWSMOeditor.getController());
+		this.expandAll();
 	}
 	
 	/**
@@ -75,12 +78,14 @@ public final class HrestTagsTree extends DeprecatedBaseTree {
 	 * <ul>
 	 * 	<li>input</li>
 	 * 	<li>output</li>
+	 *  <li>param</li>
 	 * </ul>
 	 * @param visible
 	 */
 	public void setSecondLevel(boolean enabled) {
 		input.setEnabled(enabled);
 		output.setEnabled(enabled);
+		param.setEnabled(enabled);
 	}
 	
 	/* ********************************************************************* */
@@ -133,6 +138,12 @@ public final class HrestTagsTree extends DeprecatedBaseTree {
 		output = new HrestTagsTreeItem("Output", CSSIconImage.ONTO_CLASS);
 		output.setID(HREST.OUTPUT);
 		addItem(hrest, output);
+	}
+	
+	private void initParam() {
+		param = new HrestTagsTreeItem("Parameter", CSSIconImage.ONTO_CLASS);
+		param.setID(HREST.PARAM);
+		addItem(hrest, param);
 	}
 
 }

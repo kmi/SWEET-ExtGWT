@@ -4,6 +4,7 @@ import uk.ac.kmi.microwsmo.client.MicroWSMOeditor;
 import uk.ac.kmi.microwsmo.client.util.ComponentID;
 
 import com.extjs.gxt.ui.client.widget.ContentPanel;
+import com.extjs.gxt.ui.client.widget.layout.FitLayout;
 
 /**
  * Is the panel which contains the tree view of the hREST
@@ -18,6 +19,8 @@ final class ServiceStructurePanel extends ContentPanel {
 	// the hREST tag tree
 	private ServiceStructureTree tree;
 	
+	private FitLayout layout;
+	
 	/* *****  ***** */
 	
 	/**
@@ -27,9 +30,18 @@ final class ServiceStructurePanel extends ContentPanel {
 	public ServiceStructurePanel() {
 		super();
 		setID(ComponentID.SERVICE_STRUCTURE_PANEL);
+		setLayout();
 		setHeaderVisible(false);
 		initComponents();
 		addComponents();
+	}
+	
+	/**
+	 * Sets a fit layout.
+	 */
+	private void setLayout() {
+		layout = new FitLayout();
+		setLayout(layout);
 	}
 	
 	/**

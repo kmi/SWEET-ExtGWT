@@ -4,15 +4,17 @@ import uk.ac.kmi.microwsmo.client.MicroWSMOeditor;
 import uk.ac.kmi.microwsmo.client.util.ComponentID;
 
 import com.extjs.gxt.ui.client.event.Events;
-import com.extjs.gxt.ui.client.widget.button.ToolButton;
+import com.extjs.gxt.ui.client.widget.button.Button;
 
-public final class QueryWatsonButton extends ToolButton {
+public final class QueryWatsonButton extends Button {
 
 	public QueryWatsonButton() {
-		super("x-tool-gear");
+		//super("x-tool-gear");
+		super("Search Watson");
 		setID(ComponentID.QUERY_WATSON_BUTTON);
 		setToolTip("Query Watson");
 		addListener(Events.OnClick, MicroWSMOeditor.getController());
+		setBorders(true);
 	}
 	
 	/**

@@ -54,7 +54,13 @@ public class Save extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession(true);
 	    // retrieve the web page's html code
+		//request.setCharacterEncoding(arg0)
 	    String innerHtml = request.getParameter("html");
+	    
+	    innerHtml= innerHtml.replace("%7B", "{");
+	    innerHtml= innerHtml.replace("%7D", "}");
+	    innerHtml= innerHtml.replace("&amp;", "&");
+	    
 	    String processId = "http://www.soa4all.eu/process/sessionLost";
 		String documentUri = "http://www.soa4all.eu/documentUri/sessionLost";
 		URI sessionId = new URIImpl("http://www.soa4all.eu/session/sessionLost");

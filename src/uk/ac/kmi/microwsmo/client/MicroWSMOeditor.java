@@ -15,7 +15,9 @@ import uk.ac.kmi.microwsmo.client.view.EditorMenuBar;
 import uk.ac.kmi.microwsmo.client.view.EditorViewport;
 import uk.ac.kmi.microwsmo.client.view.ExportButton;
 import uk.ac.kmi.microwsmo.client.view.HrestTagsTree;
+import uk.ac.kmi.microwsmo.client.view.LoadOntologyButton;
 import uk.ac.kmi.microwsmo.client.view.NavigatorTextField;
+import uk.ac.kmi.microwsmo.client.view.OwnOntologyTree;
 import uk.ac.kmi.microwsmo.client.view.QueryWatsonButton;
 import uk.ac.kmi.microwsmo.client.view.SaveButton;
 import uk.ac.kmi.microwsmo.client.view.SemanticAnnotationContextMenu;
@@ -24,8 +26,13 @@ import uk.ac.kmi.microwsmo.client.view.ServicePropertiesTree;
 import uk.ac.kmi.microwsmo.client.view.ServiceStructureTree;
 import uk.ac.kmi.microwsmo.client.view.WebPagesDisplay;
 
+import com.extjs.gxt.ui.client.widget.tree.Tree;
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.rpc.ServiceDefTarget;
 import com.google.gwt.user.client.ui.RootPanel;
+import uk.ac.kmi.microwsmo.client.util.RemoteServiceHelper;
+
 
 /**
  * This is the entry point of the application. It contains
@@ -37,6 +44,7 @@ public final class MicroWSMOeditor implements EntryPoint {
 	
 	/* VIEW */
 	private static AnnotationsTree annotationsTree;
+	private static OwnOntologyTree ownOntologyTree;
 	private static EditorMenuBar editorMenuBar;
 	private static WebPagesDisplay webPageDisplay;
 	private static SaveButton saveButton;
@@ -49,8 +57,10 @@ public final class MicroWSMOeditor implements EntryPoint {
 	private static DomainOntologiesPanel domainOntologiesPanel;
 	private static DomainOntologiesTree domainOntologiesTree;
 	private static QueryWatsonButton queryWatsonButton;
+	private static LoadOntologyButton loadOntologyButton;
 	private static NavigatorTextField navigatorTextField;
 	private EditorViewport editorViewPort;
+	private static MicroWSMODataServiceAsync processor;
 	
 	/* CONTROLLER */
 	private static Controller controller;
@@ -68,6 +78,13 @@ public final class MicroWSMOeditor implements EntryPoint {
 		return annotationsTree;
 	}
 	
+	public static OwnOntologyTree getOwnOntologyTree() {
+		if( ownOntologyTree == null ) {
+			ownOntologyTree = new OwnOntologyTree();
+		}
+		return ownOntologyTree;
+	}
+	
 	/**
 	 * Returns the menu bar of the editor.
 	 *  
@@ -79,6 +96,17 @@ public final class MicroWSMOeditor implements EntryPoint {
 		}
 		return editorMenuBar;
 	}
+	
+	public static MicroWSMODataServiceAsync getDataServiceProxy() {
+        
+		if( processor == null ) {
+			processor = (MicroWSMODataServiceAsync)
+			
+		    RemoteServiceHelper.getInstance().setupRemoteService((ServiceDefTarget) GWT.create(MicroWSMODataService.class));
+		   
+		}
+		return processor;
+    }
 	
 	/**
 	 * Returns the component which display the web service
@@ -213,6 +241,13 @@ public final class MicroWSMOeditor implements EntryPoint {
 			queryWatsonButton = new QueryWatsonButton();
 		}
 		return queryWatsonButton;
+	}
+	
+	public static LoadOntologyButton getLoadOntologyButton() {
+		if( loadOntologyButton == null ) {
+			loadOntologyButton = new LoadOntologyButton();
+		}
+		return loadOntologyButton;
 	}
 	
 	/**

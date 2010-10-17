@@ -124,6 +124,7 @@ public class LogManagerImpl implements LogManager {
 				//throw new LogException("Unknown Action: " + actionUri.toString());
 			}
 
+			object.replaceAll(" ", "");
 			repoModel.addStatement(actionInst, actUri, repoModel.createURI(object));
 			repoModel.addStatement(logEntryInst, directTypeUri, logEntryUri);
 			//repoModel.addStatement(logEntryInst, hasActionUri, actionInst);

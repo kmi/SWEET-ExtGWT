@@ -55,7 +55,7 @@ public final class SaveButton extends Button {
 		});
 
 		saveMenu.add(saveLocal);
-		saveMenu.add(saveToRepo);
+		//saveMenu.add(saveToRepo);
 		this.setMenu(saveMenu);
 	}
 	

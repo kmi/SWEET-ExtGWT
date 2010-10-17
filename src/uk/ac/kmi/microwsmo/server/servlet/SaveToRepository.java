@@ -35,6 +35,11 @@ public class SaveToRepository extends HttpServlet {
 		String userName = request.getParameter("user");
 		String password = request.getParameter("password");
 		String html = request.getParameter("html");
+		
+		html= html.replace("%7B", "{");
+		html= html.replace("%7D", "}");
+		html= html.replace("&amp;", "&");
+	    
 		Request restRequest = new Request(Method.POST, uri);
 
 		StringRepresentation eintity = new StringRepresentation(html, MediaType.TEXT_HTML);

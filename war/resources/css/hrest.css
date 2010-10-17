@@ -38,6 +38,11 @@
 	border-width: thin;
 }
 
+.paramm {
+	color: white;
+	background-color: black;
+}
+
 
 /*
  *	Is the style for the keyword semantically annotated.

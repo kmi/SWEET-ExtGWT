@@ -2,6 +2,7 @@ package uk.ac.kmi.microwsmo.client.view;
 
 import uk.ac.kmi.microwsmo.client.util.CSSIconImage;
 import uk.ac.kmi.microwsmo.client.util.ComponentID;
+import uk.ac.kmi.microwsmo.client.util.ComponentID.AnnotationClass;
 
 /**
  * 
@@ -26,7 +27,7 @@ public final class ServiceStructureTree extends BaseTree {
 	 */
 	private void initTree() {
 		store.removeAll();
-		hrest = new BaseTreeItem("hrest", CSSIconImage.FOLDER_CLOSED);
+		hrest = new BaseTreeItem(AnnotationClass.TREEROOT, CSSIconImage.ROOT, AnnotationClass.TREEROOT);
 		addRootItem(hrest);
 	}
 	
@@ -49,5 +50,6 @@ public final class ServiceStructureTree extends BaseTree {
 	public void setDefaultState() {
 		initTree();
 	}
+	
 	
 }

@@ -30,7 +30,7 @@ final class RightSidePanel extends ContentPanel {
 	// is another visualization of the service properties
 	private DomainOntologiesPanel domainOntologiesPanel;
 	// contains the keyword annotated
-	private AnnotationsPanel annotationsPanel;
+	//private OwnOntologyPanel ownOntologyPanel;
 	
 	/* *****  ***** */
 	
@@ -74,7 +74,7 @@ final class RightSidePanel extends ContentPanel {
 		hrestTagsPanel = new HrestTagsPanel();
 		servicePropertiesPanel = MicroWSMOeditor.getServicePropertiesPanel();
 		domainOntologiesPanel = MicroWSMOeditor.getDomainOntologiesPanel();
-		annotationsPanel = new AnnotationsPanel();
+		//ownOntologyPanel = new OwnOntologyPanel();
 	}
 	
 	/**
@@ -82,13 +82,17 @@ final class RightSidePanel extends ContentPanel {
 	 */
 	private void addComponents() {
 		QueryWatsonButton item = MicroWSMOeditor.getQueryWatsonButton();
+		//LoadOntologyButton loadOntologyButton = MicroWSMOeditor.getLoadOntologyButton();
+		toolBar.add(new SeparatorToolItem());
 		toolBar.add(item);  
+		toolBar.add(new SeparatorToolItem());
+		//toolBar.add(loadOntologyButton);
 		toolBar.add(new SeparatorToolItem());
 		setTopComponent(toolBar);
 		add(hrestTagsPanel);
 		add(servicePropertiesPanel);
 		add(domainOntologiesPanel);
-		add(annotationsPanel);
+		//add(ownOntologyPanel);
 	}
 	
 }

@@ -75,9 +75,10 @@ final class CenterSidePanel extends LayoutContainer {
 		upperConstraint = new BorderLayoutData(LayoutRegion.NORTH, 50F);
 		upperConstraint.setCollapsible(true);
 		centerConstraint = new BorderLayoutData(LayoutRegion.CENTER, 0.8F);
-		lowerConstraint = new BorderLayoutData(LayoutRegion.SOUTH, 0.2F);
-		lowerConstraint.setCollapsible(true);
-		lowerConstraint.setSplit(true);
+		//lowerConstraint = new BorderLayoutData(LayoutRegion.SOUTH, 0.2F);
+		//lowerConstraint.setCollapsible(true);
+		//lowerConstraint.setSplit(true);
+		//lowerConstraint.setMinSize(0);
 	}
 	
 	/**
@@ -86,7 +87,7 @@ final class CenterSidePanel extends LayoutContainer {
 	private void initComponents() {
 		navigator = new NavigatorPanel();
 		viewer = new WebPagesDisplay();
-		lowerPanel = new LowerSidePanel();
+		//lowerPanel = new LowerSidePanel();
 	}
 	
 	/**
@@ -95,7 +96,7 @@ final class CenterSidePanel extends LayoutContainer {
 	private void addComponents() {
 		add(navigator, upperConstraint);
 		add(viewer, centerConstraint);
-		add(lowerPanel, lowerConstraint);
+		//add(lowerPanel, lowerConstraint);
 	}
 	
 }
