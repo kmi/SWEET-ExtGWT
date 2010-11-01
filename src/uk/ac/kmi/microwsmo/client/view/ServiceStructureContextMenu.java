@@ -163,8 +163,7 @@ final class ServiceStructureContextMenu extends Menu {
 		ServiceStructureTree tree = MicroWSMOeditor.getServiceStructureTree();
 		BaseTreeItem selectedItem = tree.getSelectedItem();
 		
-		if(selectedItem.getNodeType() == AnnotationClass.SERVICE || selectedItem.getNodeType() == AnnotationClass.OPERATION 
-				|| selectedItem.getNodeType() == AnnotationClass.PARAM || selectedItem.getNodeType() == AnnotationClass.ADDRESS){
+		if(selectedItem.getNodeType() != AnnotationClass.INPUT && selectedItem.getNodeType() != AnnotationClass.OUTPUT){
 			
 			AddModelReferenceDialog addModelReferenceDialog = new AddModelReferenceDialog(selectedItem.getModelReference());
 			addModelReferenceDialog.setModal(true);

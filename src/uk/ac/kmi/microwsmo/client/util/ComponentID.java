@@ -178,10 +178,10 @@ public abstract class ComponentID {
 					//was entityCount
 					paramCount++;
 					//was entity
-					return "paramm" + paramCount;
+					return "param" + paramCount;
 				} else if( item.equals(HREST.PARAM) ) {
 					paramCount++;
-					return "paramm" + paramCount;
+					return "param" + paramCount;
 				} else {
 					unknownCount++;
 					return "unknown" + unknownCount;

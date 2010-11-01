@@ -51,6 +51,7 @@ import com.google.appengine.api.urlfetch.URLFetchServiceFactory;
 import org.apache.commons.httpclient.HttpClient;
 
 
+import java.util.Properties;
 import java.util.UUID;
 
 /**
@@ -121,6 +122,10 @@ public class Proxy extends HttpServlet {
 		
 		if(lenght == -1){
 			
+			Properties prop = System.getProperties();
+			prop.put("http.proxyHost", "http://wwwcache.open.ac.uk");
+			prop.put("http.proxyPort", "80");
+
 			HttpClient client = new HttpClient();
 			HttpMethodBase httpMethod = null;
 			httpMethod = new GetMethod(url.toString());

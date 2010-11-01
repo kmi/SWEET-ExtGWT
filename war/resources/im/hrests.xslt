@@ -30,6 +30,7 @@
                             <rdfs:isDefinedBy rdf:resource=""/>
                             <xsl:apply-templates mode="servicelabel" select="*" />
                             <xsl:apply-templates mode="microwsmo" select="*" />
+                            <xsl:apply-templates mode="localmicrowsmo" select="." />
                             <xsl:apply-templates mode="operation" select="*"/>
                         </msm:Service>
                     </xsl:for-each>
@@ -67,6 +68,7 @@
                     </xsl:otherwise>
                 </xsl:choose> 
                 <xsl:apply-templates mode="microwsmo" select="*" />
+                <xsl:apply-templates mode="localmicrowsmo" select="." />
                 <xsl:apply-templates mode="operationinput" select="*"/>
                 <xsl:apply-templates mode="operationoutput" select="*"/>
             </msm:Operation>
@@ -153,7 +155,8 @@
                 <xsl:when test="$value='POST'   or $value='post'   or $value='Post'"  >POST</xsl:when>
                 <xsl:when test="$value='DELETE' or $value='delete' or $value='Delete'">DELETE</xsl:when>
                 <xsl:otherwise>
-                    <xsl:message terminate="yes">Unknown HTTP method: <xsl:value-of select="$value"/></xsl:message>
+                    <xsl:message terminate="no">Unknown HTTP method: <xsl:value-of select="$value"/></xsl:message>
+                    <xsl:value-of select="'GET'"/>
                 </xsl:otherwise>
             </xsl:choose>
         </hr:hasMethod>
@@ -231,6 +234,7 @@
                 <xsl:apply-templates mode="messagelabel" select="*"/>
                 <xsl:apply-templates mode="parameter" select="*"/>
                 <xsl:apply-templates mode="microwsmo" select="*" />
+                <xsl:apply-templates mode="localmicrowsmo" select="." />
             </msm:MessageContent>
         </msm:hasInput>
     </xsl:template>
@@ -244,6 +248,7 @@
                 <xsl:apply-templates mode="messagelabel" select="*"/>
                 <xsl:apply-templates mode="parameter" select="*"/>
                 <xsl:apply-templates mode="microwsmo" select="*" />
+                <xsl:apply-templates mode="localmicrowsmo" select="." />
             </msm:MessageContent>
         </msm:hasOutput>
     </xsl:template>
@@ -294,6 +299,7 @@
             </xsl:if>
             <xsl:apply-templates mode="parameterlabel" select="*"/>
             <xsl:apply-templates mode="microwsmo" select="*" />
+            <xsl:apply-templates mode="localmicrowsmo" select="." />
         </msm:MessagePart>
     </xsl:template>
 
@@ -332,37 +338,50 @@
         </xsl:choose>
     </xsl:template>
 
-	<xsl:template name="globalReplace">
-	  <xsl:param name="outputString"/>
-	  <xsl:param name="target"/>
-	  <xsl:param name="replacement"/>
-	  <xsl:choose>
-	    <xsl:when test="contains($outputString,$target)">
-	   
-	      <xsl:value-of select="concat(substring-before($outputString,$target),$replacement)"/>
-	      <xsl:call-template name="globalReplace">
-	        <xsl:with-param name="outputString" select="substring-after($outputString,$target)"/>
-	        <xsl:with-param name="target" select="$target"/>
-	        <xsl:with-param name="replacement" select="$replacement"/>
-	      </xsl:call-template>
-	    </xsl:when>
-	    <xsl:otherwise>
-	      <xsl:value-of select="$outputString"/>
-	    </xsl:otherwise>
-	  </xsl:choose>
-	</xsl:template>
-
-    <xsl:template name="model">
+    <xsl:template match="*" mode="localmicrowsmo">
         <xsl:choose>
-           <xsl:when test="contains(@href, ' ')">
-	           	<xsl:call-template name="globalReplace">
-	              <xsl:with-param name="outputString" select="@href"/>
-	              <xsl:with-param name="target" select="string(' ')"/>
-	              <xsl:with-param name="replacement" select="string('%20')"/>
-	       		</xsl:call-template>
+            <xsl:when test="contains(concat(' ',normalize-space(@rel),' '),' model ')">
+                <xsl:call-template name="model"/>
+            </xsl:when>
+            <xsl:when test="contains(concat(' ',normalize-space(@rel),' '),' lifting ')">
+                <xsl:call-template name="lifting"/>
+            </xsl:when>
+            <xsl:when test="contains(concat(' ',normalize-space(@rel),' '),' lowering ')">
+                <xsl:call-template name="lowering"/>
             </xsl:when>
         </xsl:choose>
-        <sawsdl:modelReference rdf:resource="{@href}"/>
+    </xsl:template>
+
+    <xsl:template name="replace">
+        <xsl:param name="data"/>
+        <xsl:param name="pattern"/>
+        <xsl:param name="replacement"/>
+        <xsl:choose>
+            <xsl:when test="contains($data,$pattern)">
+                <xsl:value-of select="concat(substring-before($data,$pattern),$replacement)"/>
+                <xsl:call-template name="replace">
+                    <xsl:with-param name="data" select="substring-after($data,$pattern)"/>
+                    <xsl:with-param name="pattern" select="$pattern"/>
+                    <xsl:with-param name="replacement" select="$replacement"/>
+                </xsl:call-template>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:value-of select="$data"/>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+
+    <xsl:template name="model">
+        <sawsdl:modelReference>
+            <xsl:attribute name="rdf:resource">
+               <xsl:call-template name="replace">
+                  <xsl:with-param name="data" select="@href"/>
+                  <xsl:with-param name="pattern" select="string(' ')"/>
+                  <xsl:with-param name="replacement" select="string('%20')"/>
+               </xsl:call-template>
+            </xsl:attribute>
+        </sawsdl:modelReference>
+        <!-- <sawsdl:modelReference rdf:resource="{replace(@href, ' ', '%20')}"/>  - this would work with xslt 2.0 -->
     </xsl:template>
 
     <xsl:template name="lifting">
