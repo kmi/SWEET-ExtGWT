@@ -6,7 +6,7 @@ import com.extjs.gxt.ui.client.widget.menu.MenuItem;
 public abstract class ComponentID {
 	
 	//was entity
-	public static String ENTITY = "paramm";
+	public static String ENTITY = "parameter";
 
 	public static String ANNOTATIONS_CONTEXT_MENU = "annotationsContextMenu";
 	public static String ANNOTATIONS_PANEL = "annotationsPanel";
@@ -64,7 +64,7 @@ public abstract class ComponentID {
 		public static final String OPERATION = "operation";
 		public static final String INPUT = "input";
 		public static final String OUTPUT = "output";
-		public static final String PARAM = "paramm";
+		public static final String PARAM = "parameter";
 		
 
 		/* The html element to use with the hREST tag */
@@ -113,8 +113,8 @@ public abstract class ComponentID {
 		public static final String INPUT = "input";
 		public static final String OUTPUT = "output";
 		//was entity
-		public static final String ENTITY = "paramm";
-		public static final String PARAM = "paramm";
+		public static final String ENTITY = "parameter";
+		public static final String PARAM = "parameter";
 		public static final String TREEROOT = "SemanticAnnotation";
 		public static final String MODELREFERENCE = "areference";
 		public static final String SCHEMAMAPPING = "aschemamapping";

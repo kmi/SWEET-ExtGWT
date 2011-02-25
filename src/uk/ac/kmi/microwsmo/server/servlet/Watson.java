@@ -2,6 +2,7 @@ package uk.ac.kmi.microwsmo.server.servlet;
 
 import java.io.IOException;
 import java.net.URLDecoder;
+import java.util.Properties;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
@@ -46,6 +47,19 @@ public class Watson extends HttpServlet {
 		// initialize the result variable
 		String result = "";
 		// if the method is a service properties or a domain ontologies query
+		
+		
+		//Remove proxy for Watson calls. Proxy only needed for Proxy sservlet.
+		/*Properties prop = System.getProperties();
+		if(prop.containsKey("http.proxyHost")){
+			prop.remove("http.proxyHost");
+		}
+		
+		if(prop.containsKey("http.proxyPort")){
+			prop.remove("http.proxyPort");
+		}*/
+		
+		
 		if( method.equals("sp") || method.equals("do") ) {
 			// retrieve the keyword
 			String keyword = request.getParameter("keyword");

@@ -298,8 +298,8 @@ public final class Controller extends KeyListener implements Listener<ComponentE
 		final String id = treeItem.getID();
 		final String icon = treeItem.getIcon();
 		
-		//was entity
-		final String newId = IDGenerator.getID("paramm");
+		//was entity, key word paramm, parameter
+		final String newId = IDGenerator.getID("parameter");
 		
 		//Update HTML DOM
 		if( treeItem.getKind() == BaseTreeItem.ENTITY) {

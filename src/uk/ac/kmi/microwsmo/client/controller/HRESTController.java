@@ -325,7 +325,7 @@ public final class HRESTController {
 			return @uk.ac.kmi.microwsmo.client.controller.HRESTController::checkInput(Ljava/lang/Object;)(element);
 		} else if (hrestType == "output") {
 			return @uk.ac.kmi.microwsmo.client.controller.HRESTController::checkOutput(Ljava/lang/Object;)(element);
-		} else if (hrestType == "paramm") {
+		} else if (hrestType == "parameter") {
 			return @uk.ac.kmi.microwsmo.client.controller.HRESTController::checkParam(Ljava/lang/Object;)(element);
 		} else {
 			return false;
@@ -349,7 +349,7 @@ public final class HRESTController {
         var parent = element.parentNode;
         var className = parent.className;
         while( parent.nodeName != "BODY" && className != "service" && className != "label" && className != "method" && className != "address" 
-        		&& className != "operation" && className != "input" && className != "output" && className != "paramm") {
+        		&& className != "operation" && className != "input" && className != "output" && className != "parameter") {
         	parent = parent.parentNode;
         	className = parent.className;
         }

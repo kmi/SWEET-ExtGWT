@@ -120,13 +120,14 @@ public class Proxy extends HttpServlet {
 		
 		int lenght = connection.getContentLength();
 		
+		/*Properties prop = System.getProperties();
+		prop.put("http.proxyHost", "wwwcache.open.ac.uk");
+		prop.put("http.proxyPort", "80");*/
+		
 		if(lenght == -1){
-			
-			Properties prop = System.getProperties();
-			prop.put("http.proxyHost", "http://wwwcache.open.ac.uk");
-			prop.put("http.proxyPort", "80");
 
 			HttpClient client = new HttpClient();
+			client.getHostConfiguration().setProxy("wwwcache.open.ac.uk", 80);
 			HttpMethodBase httpMethod = null;
 			httpMethod = new GetMethod(url.toString());
 			client.executeMethod(httpMethod);

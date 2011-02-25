@@ -440,7 +440,7 @@ public final class SemanticController {
 						// create the attribute "class"
 						attribute = $doc.createAttribute("class");
 						//was entity
-						attribute.value = "paramm";
+						attribute.value = "parameter";
 						element.setAttributeNode(attribute);
 						// create the attribute "rel"
 						attribute = $doc.createAttribute("rel");

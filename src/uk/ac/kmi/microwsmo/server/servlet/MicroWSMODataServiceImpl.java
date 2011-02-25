@@ -53,6 +53,9 @@ public class MicroWSMODataServiceImpl extends RemoteServiceServlet implements Mi
 	private String fetchContent(String url) throws Exception {
         GetMethod getMtd = new GetMethod(url);
         HttpClient httpclient = new HttpClient();
+        
+        httpclient.getHostConfiguration().setProxy("wwwcache.open.ac.uk", 80);
+        
         try {
             int result = httpclient.executeMethod(getMtd);
             if (result != 200) {

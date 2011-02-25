@@ -73,7 +73,10 @@ public class AddLiftingLoweringSchema extends Dialog {
 				String newUri = uri.getValue();
 				
 					if ( uri.getValue() != null && uri.getValue() != "") {
-						boolean urlIsValid = checkURL(newUri);
+						
+						
+						//OK button problem
+						/*boolean urlIsValid = checkURL(newUri);
 						if(!urlIsValid){
 							final Listener<MessageBoxEvent> l = new Listener<MessageBoxEvent>(){
 						      public void handleEvent(MessageBoxEvent ce) {
@@ -104,7 +107,7 @@ public class AddLiftingLoweringSchema extends Dialog {
 							};
 								
 							MessageBox.confirm("Url Error", "The input does not seem to be a valid URL. Continue anyway?", l);
-						} else {
+						} else {*/
 							  if(oldValue == null){
 									AddLiftingLoweringSchema.this.hide();
 									
@@ -123,7 +126,7 @@ public class AddLiftingLoweringSchema extends Dialog {
 									//Update schema mapping								
 									ServiceStructureContextMenu.updateSchemaReference(uri.getValue());
 								}
-						}
+						//}
 						
 					} else{
 						Message.show(Message.EXISTINGID);

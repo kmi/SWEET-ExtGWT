@@ -86,7 +86,9 @@ public class AddModelReferenceDialog extends Dialog {
 				String newUri = uri.getValue();
 				
 					if ( newUri != null && newUri != "") {
-						boolean urlIsValid = checkURL(newUri);
+						
+						//OK button problem
+						/*boolean urlIsValid = checkURL(newUri);
 						if(!urlIsValid){final Listener<MessageBoxEvent> l = new Listener<MessageBoxEvent>(){
 						      
 							public void handleEvent(MessageBoxEvent ce) {
@@ -118,7 +120,7 @@ public class AddModelReferenceDialog extends Dialog {
 							};
 								
 							MessageBox.confirm("Url Error", "The input does not seem to be a valid URL. Continue anyway?", l);
-						} else{
+						} else{*/
 							if(oldValue == null){
 								//Create model reference
 								AddModelReferenceDialog.this.hide();
@@ -127,7 +129,6 @@ public class AddModelReferenceDialog extends Dialog {
 								
 							}else if(oldValue.trim() == ""){
 								//Create model reference
-								
 								AddModelReferenceDialog.this.hide();
 								
 								ServiceStructureContextMenu.createModelReference(newUri);
@@ -138,7 +139,7 @@ public class AddModelReferenceDialog extends Dialog {
 								//Update model reference								
 								ServiceStructureContextMenu.updateModelReference(newUri);
 							}
-						}
+						//}
 						//Controller.renameProperty(servicesUri, userNameString, passwordString);
 					} else{
 						Message.show(Message.EXISTINGID);
