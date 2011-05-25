@@ -48,14 +48,14 @@
 		<servlet-class>
 		uk.ac.kmi.microwsmo.server.servlet.Watson</servlet-class>
 	</servlet>
-	<servlet>
+	<!--<servlet>
 		<description>
 		</description>
 		<display-name>sessionChecker</display-name>
 		<servlet-name>sessionChecker</servlet-name>
 		<servlet-class>
 		uk.ac.kmi.microwsmo.server.servlet.SessionChecker</servlet-class>
-	</servlet>
+	</servlet>-->
 	<servlet>
 		<description>
 		</description>
